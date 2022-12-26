@@ -144,26 +144,28 @@ const App = () => {
     );
   };
 
-  const id = uid;
-  CometChat.addMessageListener(
-    id,
-    new CometChat.MessageListener({
-      onTextMessageReceived: (textMessage: any) => {
-        Alert.alert('Alert Title', textMessage.text, [
-          {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ]);
-      },
-      onMediaMessageReceived: (mediaMessage: any) => {
-        console.log('Media message received successfully', mediaMessage);
-      },
-      onCustomMessageReceived: (customMessage: any) => {},
-    }),
-  );
+  useEffect(() => {
+    const id = uid;
+    CometChat.addMessageListener(
+      id,
+      new CometChat.MessageListener({
+        onTextMessageReceived: (textMessage: any) => {
+          Alert.alert('Alert Title', textMessage.text, [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ]);
+        },
+        onMediaMessageReceived: (mediaMessage: any) => {
+          console.log('Media message received successfully', mediaMessage);
+        },
+        onCustomMessageReceived: (customMessage: any) => {},
+      }),
+    );
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
