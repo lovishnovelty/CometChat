@@ -17,10 +17,8 @@ export const ChatList = () => {
   };
 
   useEffect(() => {
-    chatService.login().then(() => {
-      chatService.initMessageListener({onTextMessageReceived});
-      getChatList();
-    });
+    chatService.initMessageListener({onTextMessageReceived});
+    getChatList();
   }, []);
 
   return (

@@ -4,9 +4,12 @@ import Config from 'react-native-config';
 
 class ChatService {
   conversationRequestBuilder: CometChat.ConversationsRequestBuilder;
+  callSettingsBuilder: CometChat.CallSettingsBuilder;
+
   constructor() {
     this.conversationRequestBuilder =
       new CometChat.ConversationsRequestBuilder();
+    this.callSettingsBuilder = new CometChat.CallSettingsBuilder();
   }
   login = async () => {
     try {
@@ -87,6 +90,41 @@ class ChatService {
     } catch (err) {
       throw 'Failed to send message';
     }
+  };
+
+  initiateCall = ({
+    sessionID,
+    audioOnly = false,
+    onCallEnded,
+  }: {
+    sessionID: string;
+    audioOnly?: boolean;
+    onCallEnded?: (call: CometChat.Call) => void;
+  }) => {
+    const callListener = new CometChat.OngoingCallListener({
+      onUserJoined: (user: CometChat.User) => {
+        console.log('user joined:', user);
+      },
+      onUserLeft: (user: CometChat.User) => {
+        console.log('user left:', user);
+      },
+      onUserListUpdated: (userList: CometChat.User[]) => {
+        console.log('user list:', userList);
+      },
+      onCallEnded,
+      onError: (error: CometChat.CometChatException) => {
+        console.log('Call Error: ', error);
+      },
+      onAudioModesUpdated: (audioModes: CometChat.AudioMode[]) => {
+        console.log('audio modes:', audioModes);
+      },
+    });
+
+    return this.callSettingsBuilder
+      .setSessionID(sessionID)
+      .setIsAudioOnlyCall(audioOnly)
+      .setCallEventListener(callListener)
+      .build();
   };
 
   createID(length: number) {

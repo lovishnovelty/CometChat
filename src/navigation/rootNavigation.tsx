@@ -1,6 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {ChatList} from '../screens';
+import {APP_ROUTES} from '../constants';
+import {CallScreen, ChatList, Home} from '../screens';
 
 export const RootNavigation = () => {
   const RootStack = createNativeStackNavigator();
@@ -10,7 +11,8 @@ export const RootNavigation = () => {
         screenOptions={{
           headerShown: false,
         }}>
-        <RootStack.Screen name="chat-list" component={ChatList} />
+        <RootStack.Screen name={APP_ROUTES.home} component={Home} />
+        <RootStack.Screen name={APP_ROUTES.chatList} component={ChatList} />
       </RootStack.Navigator>
     </NavigationContainer>
   );
