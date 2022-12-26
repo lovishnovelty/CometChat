@@ -15,7 +15,7 @@ class ChatService {
     try {
       const loggedInUserID = await AsyncStorage.getItem('userID');
 
-      const userId = 'qu3a4eect2jifh';
+      const userId = this.createID(5);
 
       // create user if not stored locally
       if (!loggedInUserID) {
@@ -92,25 +92,23 @@ class ChatService {
     }
   };
 
-  initiateCall = ({
+  initiateDirectCall = ({
     sessionID,
     audioOnly = false,
     onCallEnded,
+    onUserJoined,
+    onUserListUpdated,
   }: {
     sessionID: string;
     audioOnly?: boolean;
+    onUserJoined?: (user: CometChat.User) => void;
+    onUserLeft?: (user: CometChat.User) => void;
     onCallEnded?: (call: CometChat.Call) => void;
+    onUserListUpdated?: (userList: CometChat.User[]) => void;
   }) => {
     const callListener = new CometChat.OngoingCallListener({
-      onUserJoined: (user: CometChat.User) => {
-        console.log('user joined:', user);
-      },
-      onUserLeft: (user: CometChat.User) => {
-        console.log('user left:', user);
-      },
-      onUserListUpdated: (userList: CometChat.User[]) => {
-        console.log('user list:', userList);
-      },
+      onUserJoined,
+      onUserListUpdated,
       onCallEnded,
       onError: (error: CometChat.CometChatException) => {
         console.log('Call Error: ', error);
@@ -123,6 +121,7 @@ class ChatService {
     return this.callSettingsBuilder
       .setSessionID(sessionID)
       .setIsAudioOnlyCall(audioOnly)
+      .setDefaultAudioMode(CometChat.AUDIO_MODE.SPEAKER)
       .setCallEventListener(callListener)
       .build();
   };
