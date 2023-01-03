@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {PermissionsAndroid, Platform, Text} from 'react-native';
 import {RootNavigation} from './src/navigation/rootNavigation';
 import {chatService} from './src/services';
+import {Provider} from 'react-redux';
+import {store} from './src/redux';
 
 const getPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -34,7 +36,11 @@ const App = () => {
 
   if (isLoggingIn) return <Text>Loggin in...</Text>;
 
-  return <RootNavigation />;
+  return (
+    <Provider store={store}>
+      <RootNavigation />
+    </Provider>
+  );
 };
 
 export default App;

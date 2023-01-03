@@ -30,35 +30,6 @@ export const RootNavigation = () => {
           name={APP_ROUTES.callingScreen}
           component={CallingScreen}
         />
-        <RootStack.Screen
-          name={APP_ROUTES.cometChatUi}
-          component={CometChatUI}
-        />
-        <RootStack.Screen
-          name="Conversation"
-          component={CometChatConversationListWithMessages}
-        />
-        <RootStack.Screen
-          name="ConversationComponent"
-          component={CometChatConversationList}
-        />
-        <RootStack.Screen
-          name="Group"
-          component={CometChatGroupListWithMessages}
-        />
-        <RootStack.Screen
-          name="GroupComponent"
-          component={CometChatGroupList}
-        />
-        <RootStack.Screen
-          name="Users"
-          component={CometChatUserListWithMessages}
-        />
-        <RootStack.Screen name="UsersComponent" component={CometChatUserList} />
-        <RootStack.Screen
-          name="CometChatMessages"
-          component={CometChatMessages}
-        />
       </RootStack.Navigator>
     </NavigationContainer>
   );
