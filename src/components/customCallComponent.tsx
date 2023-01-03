@@ -11,7 +11,7 @@ export const CustomCallComponent = ({
   onCallEnded: () => void;
 }) => {
   const getSettings = () => {
-    return chatService.initiateCall({
+    return chatService.joinCall({
       sessionID: sessionID ?? 'abc',
       onCallEnded,
     });

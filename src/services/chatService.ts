@@ -78,6 +78,7 @@ class ChatService {
         senderAvatar:
           sender.getAvatar() ??
           'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
+        senderID: sender.getUid(),
         date: '2022',
       };
     });
@@ -105,7 +106,7 @@ class ChatService {
     }
   };
 
-  initiateCall = ({
+  joinCall = ({
     sessionID,
     audioOnly = false,
     onCallEnded,
@@ -137,6 +138,52 @@ class ChatService {
       .setDefaultAudioMode(CometChat.AUDIO_MODE.SPEAKER)
       .setCallEventListener(callListener)
       .build();
+  };
+
+  initiateCall = ({
+    receiverID,
+    callType = CometChat.CALL_TYPE.AUDIO,
+    receiverType = CometChat.RECEIVER_TYPE.USER,
+  }: {
+    receiverID: string;
+    callType?: string;
+    receiverType?: string;
+  }) => {
+    const call = new CometChat.Call(receiverID, callType, receiverType);
+
+    return CometChat.initiateCall(call);
+  };
+
+  listenForCall = ({
+    listnerId,
+    onIncomingCallReceived,
+    onIncomingCallCancelled,
+    onOutgoingCallAccepted,
+    onOutgoingCallRejected,
+  }: {
+    listnerId: string;
+    onIncomingCallReceived?: (call: CometChat.Call) => void;
+    onOutgoingCallAccepted?: (call: CometChat.Call) => void;
+    onOutgoingCallRejected?: (call: CometChat.Call) => void;
+    onIncomingCallCancelled?: (call: CometChat.Call) => void;
+  }) => {
+    CometChat.addCallListener(
+      listnerId,
+      new CometChat.CallListener({
+        onIncomingCallReceived,
+        onOutgoingCallAccepted,
+        onOutgoingCallRejected,
+        onIncomingCallCancelled,
+      }),
+    );
+  };
+
+  acceptIncomingCall = (sessionId: string) => {
+    return CometChat.acceptCall(sessionId);
+  };
+
+  rejectIncomingCall = (sessionId: string) => {
+    return CometChat.rejectCall(sessionId, CometChat.CALL_STATUS.REJECTED);
   };
 
   createID(length: number) {

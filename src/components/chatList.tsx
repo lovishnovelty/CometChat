@@ -23,8 +23,8 @@ export const ChatList = () => {
     setChatList(chatList);
   };
 
-  const onChatItemPress = () => {
-    navigation.navigate(APP_ROUTES.chatScreen);
+  const onChatItemPress = (conversation: IConversation) => {
+    navigation.navigate(APP_ROUTES.chatScreen, conversation);
   };
 
   useEffect(() => {
@@ -39,7 +39,14 @@ export const ChatList = () => {
         data={chatList}
         contentContainerStyle={chatListStyles.list}
         renderItem={({item}) => {
-          return <ChatListItem conversation={item} onPress={onChatItemPress} />;
+          return (
+            <ChatListItem
+              conversation={item}
+              onPress={() => {
+                onChatItemPress(item);
+              }}
+            />
+          );
         }}
       />
     </View>
