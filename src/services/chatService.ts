@@ -15,20 +15,24 @@ class ChatService {
     try {
       const loggedInUserID = await AsyncStorage.getItem('userID');
 
-      const userId = this.createID(5);
+      let userId = this.createID(5);
 
       // create user if not stored locally
-      if (!loggedInUserID) {
+      if (loggedInUserID) {
+        userId = loggedInUserID;
+      } else {
+        console.log('Creating user...');
+
         const newUser = new CometChat.User(userId);
-        newUser.setName('Test User');
+        newUser.setName('Hari Lama');
         const data = await CometChat.createUser(newUser, Config.AUTH_KEY ?? '');
         await AsyncStorage.setItem('userID', data.getUid());
       }
-
       // if already logged in comet chat
       const loggedInUser = await CometChat.getLoggedinUser();
       if (loggedInUser) return loggedInUser;
 
+      console.log('logging in', userId);
       // login to comet chat
       const user = await CometChat.login(userId, Config.AUTH_KEY);
       await AsyncStorage.setItem('userID', user.getUid());
@@ -92,7 +96,7 @@ class ChatService {
     }
   };
 
-  initiateDirectCall = ({
+  initiateCall = ({
     sessionID,
     audioOnly = false,
     onCallEnded,

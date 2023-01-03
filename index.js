@@ -16,6 +16,10 @@ var appSetting = new CometChat.AppSettingsBuilder()
 
 CometChat.init(Config.APP_ID, appSetting).then(
   () => {
+    if (CometChat.setSource) {
+      console.log('set source');
+      CometChat.setSource('ui-kit', Platform.OS, 'react-native');
+    }
     console.log('Initialization completed successfully');
   },
   error => {
