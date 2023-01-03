@@ -4,4 +4,5 @@ export const APP_ROUTES = {
   home: 'home',
   cometChatUi: 'comet-chat-ui',
   chatScreen: 'chat-screen',
+  callingScreen: 'calling-screen',
 };

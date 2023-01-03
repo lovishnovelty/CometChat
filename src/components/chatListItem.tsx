@@ -2,6 +2,7 @@ import React from 'react';
 import {IConversation} from '../interfaces';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {chatListItemStyles} from '../styles';
+import {CustomAvatar} from './customAvatar';
 
 export const ChatListItem = ({
   conversation,
@@ -12,12 +13,7 @@ export const ChatListItem = ({
 }) => {
   return (
     <TouchableOpacity style={chatListItemStyles.container} onPress={onPress}>
-      <Image
-        source={{
-          uri: conversation.senderAvatar,
-        }}
-        style={chatListItemStyles.avatar}
-      />
+      <CustomAvatar url={conversation.senderAvatar} size={40} />
       <View style={chatListItemStyles.detailsContainer}>
         <Text style={chatListItemStyles.name}>{conversation.senderName}</Text>
         <Text>{conversation.message}</Text>

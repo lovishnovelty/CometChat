@@ -1,16 +1,33 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
 import {IConversation} from '../interfaces';
-import {View, Text, Image} from 'react-native';
+import {View, Text} from 'react-native';
 import {chatScreenAppBarStyles} from '../styles';
+import {chatService} from '../services';
+import {APP_ROUTES} from '../constants';
+import {CustomAvatar} from './customAvatar';
+import {CustomDivider} from './customDivider';
+import {navigation} from '../utils';
 
 export const ChatScreenAppBar = ({
   conversation,
 }: {
   conversation: IConversation;
 }) => {
-  const navigation = useNavigation();
+  const startVideoCall = async () => {
+    // const call = await chatService.initiateCall({
+    //   receiverID: conversation.senderID,
+    // });
+
+    navigation.navigate(APP_ROUTES.callingScreen, {
+      // sessionID: call.getSessionId(),
+      sessionID: '123',
+      senderAvatar: conversation.senderAvatar,
+      senderName: conversation.senderName,
+    });
+  };
+
+  const startAudioCall = () => {};
 
   return (
     <View style={chatScreenAppBarStyles.container}>
@@ -21,26 +38,22 @@ export const ChatScreenAppBar = ({
         color="black"
       />
       <View style={chatScreenAppBarStyles.detailContainer}>
-        <Image
-          source={{
-            uri: conversation.senderAvatar,
-          }}
-          style={chatScreenAppBarStyles.avatar}
-        />
+        <CustomAvatar url={conversation.senderAvatar} size={35} />
+        <CustomDivider axis="horizontal" size="xs" />
         <Text style={chatScreenAppBarStyles.name} numberOfLines={1}>
           {conversation.senderName}
         </Text>
       </View>
       <Icon
         name={'video-outline'}
-        onPress={navigation.goBack}
+        onPress={startVideoCall}
         size={24}
         color="black"
         style={chatScreenAppBarStyles.icon}
       />
       <Icon
         name={'phone'}
-        onPress={navigation.goBack}
+        onPress={startAudioCall}
         size={24}
         color="black"
         style={chatScreenAppBarStyles.icon}

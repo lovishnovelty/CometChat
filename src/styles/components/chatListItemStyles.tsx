@@ -8,11 +8,6 @@ export const chatListItemStyles = StyleSheet.create({
     paddingVertical: 15,
     marginBottom: 10,
   },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
   name: {
     fontWeight: 'bold',
     color: 'black',

@@ -8,12 +8,6 @@ export const chatScreenAppBarStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  avatar: {
-    width: 35,
-    height: 35,
-    borderRadius: 20,
-    marginRight: 10,
-  },
   detailContainer: {
     flexDirection: 'row',
     flex: 1,

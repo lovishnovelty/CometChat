@@ -5,13 +5,11 @@ import {IConversation} from '../interfaces';
 import {chatService} from '../services/chatService';
 import {globalStyles} from '../styles/globalStyles';
 import {ChatListItem} from './chatListItem';
-import {CustomDivider} from './customDivider';
-import {useNavigation} from '@react-navigation/native';
 import {APP_ROUTES} from '../constants';
 import {chatListStyles} from '../styles';
+import {navigation} from '../utils';
 
 export const ChatList = () => {
-  const navigation: any = useNavigation();
   const [chatList, setChatList] = useState<IConversation[]>([]);
 
   const onTextMessageReceived = (message: CometChat.TextMessage) => {
