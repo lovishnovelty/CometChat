@@ -1,6 +1,7 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
+import {IConversation} from '../interfaces';
 
 class ChatService {
   conversationRequestBuilder: CometChat.ConversationsRequestBuilder;
@@ -62,16 +63,24 @@ class ChatService {
     );
   };
 
-  getChatList = async () => {
+  getChatList = async (): Promise<IConversation[]> => {
     let limit: number = 30;
     const conversationRequest = this.conversationRequestBuilder
       .setLimit(limit)
       .build();
     const chatList = await conversationRequest.fetchNext();
 
-    return chatList.map(convo => ({
-      message: convo.getLastMessage().getText(),
-    }));
+    return chatList.map(convo => {
+      const sender = convo.getConversationWith() as CometChat.User;
+      return {
+        message: convo.getLastMessage().getText(),
+        senderName: sender.getName(),
+        senderAvatar:
+          sender.getAvatar() ??
+          'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
+        date: '2022',
+      };
+    });
   };
 
   sendTextMessage = async ({

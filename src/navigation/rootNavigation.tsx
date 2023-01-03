@@ -11,7 +11,8 @@ import {
   CometChatUserListWithMessages,
 } from '../../cometchat-pro-react-native-ui-kit/CometChatWorkspace/src';
 import {APP_ROUTES} from '../constants';
-import {ChatList, Home} from '../screens';
+import {Home} from '../screens';
+import {ChatScreen} from '../screens/chatScreen';
 
 export const RootNavigation = () => {
   const RootStack = createNativeStackNavigator();
@@ -21,8 +22,12 @@ export const RootNavigation = () => {
         screenOptions={{
           headerShown: false,
         }}>
-        <RootStack.Screen name={APP_ROUTES.home} component={CometChatUI} />
-        <RootStack.Screen name={APP_ROUTES.chatList} component={ChatList} />
+        <RootStack.Screen name={APP_ROUTES.home} component={Home} />
+        <RootStack.Screen name={APP_ROUTES.chatScreen} component={ChatScreen} />
+        <RootStack.Screen
+          name={APP_ROUTES.cometChatUi}
+          component={CometChatUI}
+        />
         <RootStack.Screen
           name="Conversation"
           component={CometChatConversationListWithMessages}
