@@ -32,7 +32,7 @@ export const ChatList = () => {
 
   return (
     <View>
-      <Text style={globalStyles.title}>Recent Chats</Text>
+      <Text style={globalStyles.heading}>Recent Chats</Text>
       <FlatList
         data={chatList}
         contentContainerStyle={chatListStyles.list}

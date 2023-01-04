@@ -16,12 +16,6 @@ const getPermissions = async () => {
   }
 };
 
-const addCallListener = () => {
-  chatService.listenForCall({
-    listnerId: 'listenerID',
-  });
-};
-
 const App = () => {
   const [isLoggingIn, setIsLogginIn] = useState(true);
 
@@ -30,7 +24,6 @@ const App = () => {
 
     chatService.login().then(() => {
       setIsLogginIn(false);
-      addCallListener();
     });
   }, []);
 

@@ -1,3 +1,7 @@
 export interface ICallSlice {
-  sessionID: string;
+  incomingCallID: string;
+  incomingCallInitiator: {
+    name: string;
+    avatar: string;
+  };
 }

@@ -1,4 +1,7 @@
-import {createNavigationContainerRef} from '@react-navigation/native';
+import {
+  createNavigationContainerRef,
+  StackActions,
+} from '@react-navigation/native';
 
 class Navigation {
   navigationRef: any;
@@ -17,6 +20,14 @@ class Navigation {
 
   getCurrentRouteName = () => {
     this.navigationRef.current?.getCurrentRoute();
+  };
+
+  replace = (name: string, params?: any) => {
+    this.navigationRef.dispatch(StackActions.replace(name, params));
+  };
+
+  pop = () => {
+    this.navigationRef.dispatch(StackActions.pop());
   };
 }
 

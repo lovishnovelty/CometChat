@@ -8,6 +8,7 @@ import {APP_ROUTES} from '../constants';
 import {CustomAvatar} from './customAvatar';
 import {CustomDivider} from './customDivider';
 import {navigation} from '../utils';
+import {CometChat} from '@cometchat-pro/react-native-chat';
 
 export const ChatScreenAppBar = ({
   conversation,
@@ -15,19 +16,29 @@ export const ChatScreenAppBar = ({
   conversation: IConversation;
 }) => {
   const startVideoCall = async () => {
-    // const call = await chatService.initiateCall({
-    //   receiverID: conversation.senderID,
-    // });
+    const call = await chatService.initiateCall({
+      receiverID: conversation.senderID,
+    });
 
     navigation.navigate(APP_ROUTES.callingScreen, {
-      // sessionID: call.getSessionId(),
-      sessionID: '123',
+      sessionID: call.getSessionId(),
       senderAvatar: conversation.senderAvatar,
       senderName: conversation.senderName,
     });
   };
 
-  const startAudioCall = () => {};
+  const startAudioCall = async () => {
+    const call = await chatService.initiateCall({
+      receiverID: conversation.senderID,
+      callType: CometChat.CALL_TYPE.AUDIO,
+    });
+
+    navigation.navigate(APP_ROUTES.callingScreen, {
+      sessionID: call.getSessionId(),
+      senderAvatar: conversation.senderAvatar,
+      senderName: conversation.senderName,
+    });
+  };
 
   return (
     <View style={chatScreenAppBarStyles.container}>
@@ -60,7 +71,7 @@ export const ChatScreenAppBar = ({
       />
       <Icon
         name={'dots-vertical'}
-        onPress={navigation.goBack}
+        onPress={() => {}}
         size={24}
         color="black"
         style={chatScreenAppBarStyles.icon}

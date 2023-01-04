@@ -6,9 +6,14 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
   },
-  title: {
+  heading: {
     fontWeight: 'bold',
     fontSize: 18,
+    color: 'black',
+  },
+  title: {
+    fontWeight: '500',
+    fontSize: 16,
     color: 'black',
   },
   textInput: {

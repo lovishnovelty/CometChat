@@ -1,7 +1,10 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
-import {IConversation} from '../interfaces';
+import {APP_ROUTES} from '../constants';
+import {IConversation, IModalHandle} from '../interfaces';
+import {AppDispatch, setIncomingCall} from '../redux';
+import {navigation} from '../utils';
 
 class ChatService {
   conversationRequestBuilder: CometChat.ConversationsRequestBuilder;
@@ -73,7 +76,7 @@ class ChatService {
     return chatList.map(convo => {
       const sender = convo.getConversationWith() as CometChat.User;
       return {
-        message: convo.getLastMessage().getText(),
+        message: 'convo.getLastMessage().getText()',
         senderName: sender.getName(),
         senderAvatar:
           sender.getAvatar() ??
@@ -142,7 +145,7 @@ class ChatService {
 
   initiateCall = ({
     receiverID,
-    callType = CometChat.CALL_TYPE.AUDIO,
+    callType = CometChat.CALL_TYPE.VIDEO,
     receiverType = CometChat.RECEIVER_TYPE.USER,
   }: {
     receiverID: string;
@@ -154,36 +157,53 @@ class ChatService {
     return CometChat.initiateCall(call);
   };
 
-  listenForCall = ({
-    listnerId,
-    onIncomingCallReceived,
-    onIncomingCallCancelled,
-    onOutgoingCallAccepted,
-    onOutgoingCallRejected,
-  }: {
-    listnerId: string;
-    onIncomingCallReceived?: (call: CometChat.Call) => void;
-    onOutgoingCallAccepted?: (call: CometChat.Call) => void;
-    onOutgoingCallRejected?: (call: CometChat.Call) => void;
-    onIncomingCallCancelled?: (call: CometChat.Call) => void;
-  }) => {
+  listenForCall = (
+    modalRef: React.RefObject<IModalHandle>,
+    dispatch: AppDispatch,
+  ) => {
     CometChat.addCallListener(
-      listnerId,
+      'listnerId',
       new CometChat.CallListener({
-        onIncomingCallReceived,
-        onOutgoingCallAccepted,
-        onOutgoingCallRejected,
-        onIncomingCallCancelled,
+        onIncomingCallReceived: (incomingCall: CometChat.Call) => {
+          console.log('inititator', incomingCall.getCallInitiator());
+          dispatch(
+            setIncomingCall({
+              incomingCallID: incomingCall.getSessionId(),
+              incomingCallInitiator: {
+                name: incomingCall.getCallInitiator().getName(),
+                avatar: incomingCall.getCallInitiator().getAvatar(),
+              },
+            }),
+          );
+          modalRef.current?.open();
+        },
+        onIncomingCallCancelled: (cancelledCall: CometChat.Call) => {
+          modalRef.current?.close();
+        },
+        onOutgoingCallAccepted: (acceptedCall: CometChat.Call) => {
+          navigation.replace(APP_ROUTES.callScreen, {
+            sessionID: acceptedCall.getSessionId(),
+          });
+        },
+        onOutgoingCallRejected: (rejectedCall: CometChat.Call) => {
+          navigation.pop();
+        },
       }),
     );
   };
 
-  acceptIncomingCall = (sessionId: string) => {
-    return CometChat.acceptCall(sessionId);
+  acceptIncomingCall = async (sessionId: string) => {
+    const acceptedCall = await CometChat.acceptCall(sessionId);
+    navigation.navigate(APP_ROUTES.callScreen, {
+      sessionID: acceptedCall.getSessionId(),
+    });
   };
 
-  rejectIncomingCall = (sessionId: string) => {
-    return CometChat.rejectCall(sessionId, CometChat.CALL_STATUS.REJECTED);
+  rejectIncomingCall = (
+    sessionId: string,
+    callStatus = CometChat.CALL_STATUS.REJECTED,
+  ) => {
+    return CometChat.rejectCall(sessionId, callStatus);
   };
 
   createID(length: number) {
