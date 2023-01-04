@@ -9,7 +9,7 @@ export const CallScreen = ({route}: any) => {
   const getSettings = () => {
     return chatService.joinCall({
       sessionID: sessionID ?? 'abc',
-      onCallEnded: navigation.goBack,
+      onCallEnded: navigation.pop,
     });
   };
 

@@ -1,9 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {callReducer} from './slices';
+import {authReducer, callReducer} from './slices';
 
 export const store = configureStore({
   reducer: {
     call: callReducer,
+    auth: authReducer,
   },
 });
 

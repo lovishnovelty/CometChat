@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const chatListItemStyles = StyleSheet.create({
+export const recentChatListItemStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     borderBottomWidth: 0.5,

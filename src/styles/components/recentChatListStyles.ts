@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const chatListStyles = StyleSheet.create({
+export const recentChatListStyles = StyleSheet.create({
   list: {
     flexGrow: 1,
   },

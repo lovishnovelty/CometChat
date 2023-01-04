@@ -1,7 +1,7 @@
 import React from 'react';
 import {IConversation} from '../interfaces';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import {chatListItemStyles} from '../styles';
+import {recentChatListItemStyles} from '../styles';
 import {CustomAvatar} from './customAvatar';
 
 export const ChatListItem = ({
@@ -12,10 +12,14 @@ export const ChatListItem = ({
   onPress?: () => void;
 }) => {
   return (
-    <TouchableOpacity style={chatListItemStyles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={recentChatListItemStyles.container}
+      onPress={onPress}>
       <CustomAvatar url={conversation.senderAvatar} size={40} />
-      <View style={chatListItemStyles.detailsContainer}>
-        <Text style={chatListItemStyles.name}>{conversation.senderName}</Text>
+      <View style={recentChatListItemStyles.detailsContainer}>
+        <Text style={recentChatListItemStyles.name}>
+          {conversation.senderName}
+        </Text>
         <Text>{conversation.message}</Text>
       </View>
     </TouchableOpacity>

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Text, View, TextInput, Button} from 'react-native';
-import {ChatList, CustomAvatar, CustomDivider} from '../components';
+import {RecentChatList, CustomAvatar, CustomDivider} from '../components';
 import {CustomModal} from '../components/customModal';
 import {APP_ROUTES} from '../constants';
 import {IModalHandle} from '../interfaces';
@@ -67,7 +67,7 @@ export const Home = () => {
         }}
       />
       <CustomDivider />
-      <ChatList />
+      <RecentChatList />
     </View>
   );
 };

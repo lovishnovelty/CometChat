@@ -1,5 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useEffect, useState} from 'react';
+import {Text} from 'react-native';
 import {
   CometChatConversationList,
   CometChatConversationListWithMessages,
@@ -11,12 +13,26 @@ import {
   CometChatUserListWithMessages,
 } from '../../cometchat-pro-react-native-ui-kit/CometChatWorkspace/src';
 import {APP_ROUTES} from '../constants';
+import {signIn, useAppDispatch} from '../redux';
 import {Home} from '../screens';
 import {ChatScreen, CallScreen, CallingScreen} from '../screens';
+import {chatService} from '../services';
 import {navigation} from '../utils';
 
 export const RootNavigation = () => {
   const RootStack = createNativeStackNavigator();
+  const [isLoggingIn, setIsLogginIn] = useState(true);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    chatService.login().then(user => {
+      setIsLogginIn(false);
+      dispatch(signIn(user.getUid()));
+    });
+  }, []);
+
+  if (isLoggingIn) return <Text>Loggin in...</Text>;
+
   return (
     <NavigationContainer ref={navigation.navigationRef}>
       <RootStack.Navigator

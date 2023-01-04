@@ -3,7 +3,7 @@ import {PermissionsAndroid, Platform, Text} from 'react-native';
 import {RootNavigation} from './src/navigation/rootNavigation';
 import {chatService} from './src/services';
 import {Provider} from 'react-redux';
-import {store} from './src/redux';
+import {signIn, store, useAppDispatch} from './src/redux';
 
 const getPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -17,17 +17,9 @@ const getPermissions = async () => {
 };
 
 const App = () => {
-  const [isLoggingIn, setIsLogginIn] = useState(true);
-
   useEffect(() => {
     getPermissions();
-
-    chatService.login().then(() => {
-      setIsLogginIn(false);
-    });
   }, []);
-
-  if (isLoggingIn) return <Text>Loggin in...</Text>;
 
   return (
     <Provider store={store}>

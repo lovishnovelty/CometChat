@@ -4,12 +4,12 @@ import {FlatList, Text, View} from 'react-native';
 import {IConversation} from '../interfaces';
 import {chatService} from '../services/chatService';
 import {globalStyles} from '../styles/globalStyles';
-import {ChatListItem} from './chatListItem';
+import {ChatListItem} from './recentChatListItem';
 import {APP_ROUTES} from '../constants';
-import {chatListStyles} from '../styles';
+import {recentChatListStyles} from '../styles';
 import {navigation} from '../utils';
 
-export const ChatList = () => {
+export const RecentChatList = () => {
   const [chatList, setChatList] = useState<IConversation[]>([]);
 
   const onTextMessageReceived = (message: CometChat.TextMessage) => {
@@ -35,7 +35,7 @@ export const ChatList = () => {
       <Text style={globalStyles.heading}>Recent Chats</Text>
       <FlatList
         data={chatList}
-        contentContainerStyle={chatListStyles.list}
+        contentContainerStyle={recentChatListStyles.list}
         renderItem={({item}) => {
           return (
             <ChatListItem

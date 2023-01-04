@@ -8,12 +8,14 @@ import {navigation} from '../utils';
 
 class ChatService {
   conversationRequestBuilder: CometChat.ConversationsRequestBuilder;
+  messageRequestBuilder: CometChat.MessagesRequestBuilder;
   callSettingsBuilder: CometChat.CallSettingsBuilder;
 
   constructor() {
     this.conversationRequestBuilder =
       new CometChat.ConversationsRequestBuilder();
     this.callSettingsBuilder = new CometChat.CallSettingsBuilder();
+    this.messageRequestBuilder = new CometChat.MessagesRequestBuilder();
   }
   login = async () => {
     try {
@@ -32,6 +34,7 @@ class ChatService {
         const data = await CometChat.createUser(newUser, Config.AUTH_KEY ?? '');
         await AsyncStorage.setItem('userID', data.getUid());
       }
+
       // if already logged in comet chat
       const loggedInUser = await CometChat.getLoggedinUser();
       if (loggedInUser) return loggedInUser;
@@ -44,6 +47,7 @@ class ChatService {
       return user;
     } catch (e) {
       console.log('Failed to login:', e);
+      throw e;
     }
   };
 
@@ -71,6 +75,8 @@ class ChatService {
     const conversationRequest = this.conversationRequestBuilder
       .setLimit(limit)
       .build();
+
+    // return fetchNext function so that it can be called on scroll
     const chatList = await conversationRequest.fetchNext();
 
     return chatList.map(convo => {
@@ -84,6 +90,23 @@ class ChatService {
         senderID: sender.getUid(),
         date: '2022',
       };
+    });
+  };
+
+  getMessage = async (userID: string) => {
+    console.log('get message list');
+
+    let limit = 30;
+    const messageRequest = this.messageRequestBuilder
+      .setLimit(limit)
+      .setUID(userID)
+      .build();
+    console.log('get message listtttttttt');
+
+    // transform to IMessage before returning
+    return await messageRequest.fetchPrevious().catch(err => {
+      console.log(err);
+      return [];
     });
   };
 
