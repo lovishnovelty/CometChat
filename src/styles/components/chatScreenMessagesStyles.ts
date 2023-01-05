@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 export const chatScreenMessagesStyles = StyleSheet.create({
   list: {
     padding: 10,
+    paddingBottom: 0,
   },
   messageContainer: {
     paddingVertical: 10,

@@ -18,7 +18,7 @@ export const ChatListItem = ({
       <CustomAvatar url={conversation.senderAvatar} size={40} />
       <View style={recentChatListItemStyles.detailsContainer}>
         <Text style={recentChatListItemStyles.name}>
-          {conversation.senderName}
+          {conversation.otherUserName}
         </Text>
         <Text>{conversation.message.text}</Text>
       </View>

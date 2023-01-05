@@ -7,7 +7,7 @@ import {CallType} from '../enums';
 import {IConversation, IModalHandle} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import {AppDispatch, setIncomingCall} from '../redux';
-import {navigation} from '../utils';
+import {ChatUtility, navigation} from '../utils';
 
 class ChatService {
   conversationRequestBuilder: CometChat.ConversationsRequestBuilder;
@@ -81,97 +81,34 @@ class ChatService {
 
     // return fetchNext function so that it can be called on scroll
     const chatList = await conversationRequest.fetchNext();
-    return this.transformChatList(chatList, userID);
+    return ChatUtility.transformChatList(chatList, userID);
   };
 
-  transformChatList = (
-    chatList: CometChat.Conversation[],
-    userID: string,
-  ): IConversation[] => {
-    return chatList.map(convo => {
-      const sender = convo.getConversationWith() as CometChat.User;
-      return {
-        message: this.transformSingleMessage(convo.getLastMessage(), userID),
-        senderName: sender.getName(),
-        senderAvatar:
-          sender.getAvatar() ??
-          'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
-        senderID: sender.getUid(),
-        date: '2022',
-      };
-    });
-  };
-
-  getMessagesByUID = async (userID: string) => {
+  getMessagesByUID = async (userID: string, otherUserID: string) => {
     let limit = 30;
     const messageRequest = this.messageRequestBuilder
       .setLimit(limit)
-      .setUID(userID)
+      .setUID(otherUserID)
       .build();
 
     const messageList = await messageRequest.fetchPrevious().catch(err => {
       console.log(err);
       return [];
     });
-    return this.transformMessages(messageList, userID);
-  };
-
-  transformMessages = (
-    messageList: CometChat.BaseMessage[],
-    userID: string,
-  ): IMessage[] => {
-    return messageList.map(item => {
-      return this.transformSingleMessage(item, userID);
-    });
-  };
-
-  transformSingleMessage = (
-    message: CometChat.BaseMessage,
-    userID: string,
-  ): IMessage => {
-    const isTextMessage = message instanceof CometChat.TextMessage;
-    const isMediaMessage = message instanceof CometChat.MediaMessage;
-    const isCallMessage = message instanceof CometChat.Call;
-    const isSentByMe = userID === message.getSender().getUid();
-    let initiatorName = message.getSender().getName();
-    const messageInitiator = isSentByMe ? 'You' : initiatorName;
-    const callType = CallType.AUDIO;
-
-    const callMessage = `${messageInitiator} started a ${callType} call`;
-    const mediaMessage = `${messageInitiator} sent a file.`;
-    const text = isTextMessage
-      ? message.getText()
-      : isCallMessage
-      ? callMessage
-      : isMediaMessage
-      ? mediaMessage
-      : '';
-    const sentAt = moment(new Date(message.getSentAt()));
-    const time = sentAt.format('h a');
-    const date = sentAt.format('D MMM');
-
-    return {
-      text,
-      initiatorName,
-      isSentByMe,
-      isTextMessage,
-      isCallMessage,
-      isMediaMessage,
-      callType,
-      time,
-      date,
-    };
+    return ChatUtility.transformMessages(messageList, userID);
   };
 
   sendTextMessage = async ({
+    userID,
     receiverType = CometChat.RECEIVER_TYPE.USER,
     receiverID,
     message,
   }: {
+    userID: string;
     receiverType?: string;
     receiverID: string;
     message: string;
-  }) => {
+  }): Promise<IMessage> => {
     const textMessage = new CometChat.TextMessage(
       receiverID,
       message,
@@ -179,7 +116,7 @@ class ChatService {
     );
     try {
       const sentMessage = await CometChat.sendMessage(textMessage);
-      return sentMessage;
+      return ChatUtility.transformSingleMessage(sentMessage, userID);
     } catch (err) {
       throw 'Failed to send message';
     }

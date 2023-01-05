@@ -4,16 +4,20 @@ import {ChatScreenAppBar, ChatScreenMessages} from '../components';
 import {ChatScreenInput} from '../components';
 import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
+import {useAppSelector} from '../redux';
 import {chatService} from '../services';
 
 export const ChatScreen = ({route}: any) => {
   const [messageList, setMessageList] = useState<IMessage[]>([]);
   const conversation: IConversation = route.params;
+  const userID = useAppSelector(state => state.auth.userID);
 
   const getMessageList = async () => {
-    chatService.getMessagesByUID(conversation.senderID).then(data => {
-      setMessageList(data);
-    });
+    chatService
+      .getMessagesByUID(userID, conversation.otherUserID)
+      .then(data => {
+        setMessageList(data);
+      });
   };
 
   useEffect(() => {
@@ -24,7 +28,10 @@ export const ChatScreen = ({route}: any) => {
     <KeyboardAvoidingView style={{backgroundColor: 'white', flex: 1}}>
       <ChatScreenAppBar conversation={conversation} />
       <ChatScreenMessages messageList={messageList} />
-      <ChatScreenInput />
+      <ChatScreenInput
+        setMessageList={setMessageList}
+        receiverID={conversation.otherUserID}
+      />
     </KeyboardAvoidingView>
   );
 };
