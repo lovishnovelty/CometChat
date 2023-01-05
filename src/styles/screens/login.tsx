@@ -25,7 +25,9 @@ export const Login = () => {
   };
 
   return (
-    <KeyboardAwareScrollView style={globalStyles.container}>
+    <KeyboardAwareScrollView
+      style={globalStyles.container}
+      keyboardShouldPersistTaps="handled">
       <Text style={globalStyles.heading}>Welcome to the chat module</Text>
       <CustomDivider />
       <Text style={globalStyles.title}>Enter you name</Text>

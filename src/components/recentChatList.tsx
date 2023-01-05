@@ -26,8 +26,6 @@ export const RecentChatList = () => {
   };
 
   const onChatItemPress = (conversation: IConversation) => {
-    console.log('pressed', conversation);
-
     navigation.navigate(APP_ROUTES.chatScreen, conversation);
   };
 
@@ -40,7 +38,7 @@ export const RecentChatList = () => {
 
   useEffect(() => {
     getChatList();
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={globalStyles.container}>
