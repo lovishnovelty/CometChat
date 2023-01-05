@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, Button, ActivityIndicator} from 'react-native';
+import {Text, TextInput, Button, ActivityIndicator} from 'react-native';
 import {CustomDivider} from '../../components';
 import {useAppDispatch, signIn} from '../../redux';
 import {AuthService} from '../../services';
 import {globalStyles} from '../globalStyles';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export const Login = () => {
   const [name, setName] = useState('');
@@ -24,7 +25,7 @@ export const Login = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
+    <KeyboardAwareScrollView style={globalStyles.container}>
       <Text style={globalStyles.heading}>Welcome to the chat module</Text>
       <CustomDivider />
       <Text style={globalStyles.title}>Enter you name</Text>
@@ -38,6 +39,6 @@ export const Login = () => {
       ) : (
         <Button title="Login" onPress={login} />
       )}
-    </View>
+    </KeyboardAwareScrollView>
   );
 };

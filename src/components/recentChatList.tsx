@@ -37,7 +37,7 @@ export const RecentChatList = () => {
   }, []);
 
   return (
-    <View>
+    <View style={globalStyles.container}>
       <Text style={globalStyles.heading}>Recent Chats</Text>
       {chatList.length ? (
         <FlatList
