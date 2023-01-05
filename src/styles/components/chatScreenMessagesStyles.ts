@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native';
-import {SizeConfig} from '../../config';
 
 export const chatScreenMessagesStyles = StyleSheet.create({
   list: {

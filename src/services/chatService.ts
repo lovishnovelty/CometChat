@@ -79,6 +79,10 @@ class ChatService {
     // return fetchNext function so that it can be called on scroll
     const chatList = await conversationRequest.fetchNext();
 
+    return this.transformChatList(chatList);
+  };
+
+  transformChatList = (chatList: CometChat.Conversation[]) => {
     return chatList.map(convo => {
       const sender = convo.getConversationWith() as CometChat.User;
       return {
@@ -101,7 +105,6 @@ class ChatService {
       .setLimit(limit)
       .setUID(userID)
       .build();
-    console.log('get message listtttttttt');
 
     // transform to IMessage before returning
     return await messageRequest.fetchPrevious().catch(err => {

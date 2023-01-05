@@ -5,4 +5,5 @@ export * from './customAvatar';
 export * from './recentChatListItem';
 export * from './chatScreenMessages';
 export * from './chatScreenAppBar';
+export * from './chatScreenInput';
 export * from './textMessage';

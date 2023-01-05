@@ -9,7 +9,7 @@ export const callMessageStyles = StyleSheet.create({
   },
   message: {
     fontStyle: 'italic',
-    fontSize: 14,
+    fontSize: 12,
     color: 'grey',
     marginVertical: 5,
     marginHorizontal: 10,
