@@ -18,32 +18,13 @@ class ChatService {
     this.callSettingsBuilder = new CometChat.CallSettingsBuilder();
     this.messageRequestBuilder = new CometChat.MessagesRequestBuilder();
   }
-  login = async () => {
+
+  login = async (userID: string, name: string) => {
     try {
-      const loggedInUserID = await AsyncStorage.getItem('userID');
-
-      let userId = this.createID(5);
-
-      // create user if not stored locally
-      if (loggedInUserID) {
-        userId = loggedInUserID;
-      } else {
-        console.log('Creating user...');
-
-        const newUser = new CometChat.User(userId);
-        newUser.setName('Hari Lama');
-        const data = await CometChat.createUser(newUser, Config.AUTH_KEY ?? '');
-        await AsyncStorage.setItem('userID', data.getUid());
-      }
-
-      // if already logged in comet chat
-      const loggedInUser = await CometChat.getLoggedinUser();
-      if (loggedInUser) return loggedInUser;
-
-      console.log('logging in', userId);
-      // login to comet chat
-      const user = await CometChat.login(userId, Config.AUTH_KEY);
-      await AsyncStorage.setItem('userID', user.getUid());
+      const newUser = new CometChat.User(userID);
+      newUser.setName(name);
+      await CometChat.createUser(newUser, Config.AUTH_KEY ?? '');
+      const user = await CometChat.login(userID, Config.AUTH_KEY);
       console.log('User logged in:', user);
       return user;
     } catch (e) {
@@ -218,17 +199,6 @@ class ChatService {
   ) => {
     return CometChat.rejectCall(sessionId, callStatus);
   };
-
-  createID(length: number) {
-    var result = '';
-    var characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
 
   removeMessageListener = (listenerID: string) => {
     CometChat.removeMessageListener(listenerID);

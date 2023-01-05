@@ -23,31 +23,43 @@ export const RecentChatList = () => {
   };
 
   const onChatItemPress = (conversation: IConversation) => {
+    console.log('pressed', conversation);
+
     navigation.navigate(APP_ROUTES.chatScreen, conversation);
   };
 
   useEffect(() => {
-    chatService.listenForMessage({onTextMessageReceived});
+    chatService.listenForMessage({
+      onTextMessageReceived,
+      listenerID: 'recent_chat_list',
+    });
     getChatList();
   }, []);
 
   return (
     <View>
       <Text style={globalStyles.heading}>Recent Chats</Text>
-      <FlatList
-        data={chatList}
-        contentContainerStyle={recentChatListStyles.list}
-        renderItem={({item}) => {
-          return (
-            <ChatListItem
-              conversation={item}
-              onPress={() => {
-                onChatItemPress(item);
-              }}
-            />
-          );
-        }}
-      />
+      {chatList.length ? (
+        <FlatList
+          data={chatList}
+          contentContainerStyle={recentChatListStyles.list}
+          renderItem={({item}) => {
+            return (
+              <ChatListItem
+                conversation={item}
+                onPress={() => {
+                  onChatItemPress(item);
+                }}
+              />
+            );
+          }}
+        />
+      ) : (
+        <Text
+          style={[globalStyles.title, {marginTop: 100, alignSelf: 'center'}]}>
+          No chat found.
+        </Text>
+      )}
     </View>
   );
 };

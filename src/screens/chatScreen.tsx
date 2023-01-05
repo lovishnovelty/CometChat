@@ -26,7 +26,12 @@ export const ChatScreen = ({route}: any) => {
     chatService.listenForMessage({
       listenerID,
       onTextMessageReceived: textMessage => {
+        // console.log('received', textMessage);
+        console.log(conversation.id, textMessage.getConversationId());
+
         if (conversation.id === textMessage.getConversationId()) {
+          console.log('id matched');
+
           setMessageList(prev => [
             ...prev,
             ChatUtility.transformSingleMessage(textMessage, userID),

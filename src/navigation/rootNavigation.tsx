@@ -13,10 +13,16 @@ import {
   CometChatUserListWithMessages,
 } from '../../cometchat-pro-react-native-ui-kit/CometChatWorkspace/src';
 import {APP_ROUTES} from '../constants';
-import {signIn, useAppDispatch} from '../redux';
+import {
+  restoreAuthState,
+  signIn,
+  useAppDispatch,
+  useAppSelector,
+} from '../redux';
 import {Home} from '../screens';
 import {ChatScreen, CallScreen, CallingScreen} from '../screens';
-import {chatService} from '../services';
+import {AuthService, chatService} from '../services';
+import {Login} from '../styles/screens/login';
 import {navigation} from '../utils';
 
 export const RootNavigation = () => {
@@ -24,14 +30,18 @@ export const RootNavigation = () => {
   const [isLoggingIn, setIsLogginIn] = useState(true);
   const dispatch = useAppDispatch();
 
+  const isLoggedIn = useAppSelector(state => state.auth.isSignedIn);
+
   useEffect(() => {
-    chatService.login().then(user => {
-      dispatch(signIn(user.getUid()));
+    AuthService.restoreAuthState().then(authState => {
+      dispatch(restoreAuthState(authState));
       setIsLogginIn(false);
     });
   }, []);
 
   if (isLoggingIn) return <Text>Loggin in...</Text>;
+
+  if (!isLoggedIn) return <Login />;
 
   return (
     <NavigationContainer ref={navigation.navigationRef}>

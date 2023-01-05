@@ -19,7 +19,7 @@ export const ChatScreenInput = ({
 
   const removeLocallyCreatedMessage = () => {
     setMessageList(prev => {
-      return prev.filter(item => item.messageID !== 'newMessage');
+      return prev.filter(item => item.id !== 'newMessage');
     });
   };
 
@@ -30,7 +30,7 @@ export const ChatScreenInput = ({
   const sendTextMessage = () => {
     // add other field as well
     const newMessage: IMessage = {
-      messageID: 'newMessage',
+      id: 'newMessage',
       text: text,
       initiatorName: '',
       isSentByMe: true,
@@ -48,7 +48,7 @@ export const ChatScreenInput = ({
       })
       .then(message => {
         // removeLocallyCreatedMessage();
-        appendMessage(message);
+        // appendMessage(message);
       })
       .catch(() => {
         // removeLocallyCreatedMessage();
