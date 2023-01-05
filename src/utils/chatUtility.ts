@@ -16,7 +16,6 @@ export class ChatUtility {
         otherUserName: otherUser.getName(),
         otherUserAvatar: otherUser.getAvatar(),
         otherUserID: otherUser.getUid(),
-        date: '2022',
       };
     });
   };
@@ -39,6 +38,8 @@ export class ChatUtility {
     const isCallMessage = message instanceof CometChat.Call;
     const isSentByMe = userID === message.getSender().getUid();
     let initiatorName = message.getSender().getName();
+    console.log('senderID', message.getSender().getUid());
+    console.log('userID', userID);
 
     const messageInitiator = isSentByMe ? 'You' : initiatorName;
     const callType = CallType.AUDIO;

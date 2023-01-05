@@ -26,8 +26,8 @@ export const RootNavigation = () => {
 
   useEffect(() => {
     chatService.login().then(user => {
-      setIsLogginIn(false);
       dispatch(signIn(user.getUid()));
+      setIsLogginIn(false);
     });
   }, []);
 

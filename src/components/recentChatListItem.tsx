@@ -11,6 +11,8 @@ export const ChatListItem = ({
   conversation: IConversation;
   onPress?: () => void;
 }) => {
+  console.log(conversation.message.isSentByMe);
+
   return (
     <TouchableOpacity
       style={recentChatListItemStyles.container}
@@ -20,7 +22,12 @@ export const ChatListItem = ({
         <Text style={recentChatListItemStyles.name}>
           {conversation.otherUserName}
         </Text>
-        <Text>{conversation.message.text}</Text>
+        <Text>
+          {conversation.message.isSentByMe &&
+            conversation.message.isTextMessage &&
+            'You: '}
+          {conversation.message.text}
+        </Text>
       </View>
     </TouchableOpacity>
   );
