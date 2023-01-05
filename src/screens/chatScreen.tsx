@@ -14,6 +14,11 @@ export const ChatScreen = ({route}: any) => {
   const userID = useAppSelector(state => state.auth.userID);
   const listenerID = conversation.otherUserID;
 
+  const setConvoID = (id: string) => {
+    if (conversation.id === '') return;
+    conversation.id = id;
+  };
+
   const getMessageList = async () => {
     chatService
       .getMessagesByUID(userID, conversation.otherUserID)
@@ -56,6 +61,7 @@ export const ChatScreen = ({route}: any) => {
       <ChatScreenMessages messageList={messageList} />
       <ChatScreenInput
         setMessageList={setMessageList}
+        setConvoID={setConvoID}
         receiverID={conversation.otherUserID}
       />
     </KeyboardAvoidingView>

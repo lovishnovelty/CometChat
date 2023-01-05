@@ -35,6 +35,7 @@ export class ChatUtility {
     userID: string,
   ): IMessage => {
     const id = message.getId().toString();
+    const conversationID = message.getConversationId();
     const isTextMessage = message instanceof CometChat.TextMessage;
     const isMediaMessage = message instanceof CometChat.MediaMessage;
     const isCallMessage = message instanceof CometChat.Call;
@@ -60,6 +61,7 @@ export class ChatUtility {
 
     return {
       id,
+      conversationID,
       text,
       initiatorName,
       isSentByMe,

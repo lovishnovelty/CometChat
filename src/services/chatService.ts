@@ -11,12 +11,14 @@ class ChatService {
   conversationRequestBuilder: CometChat.ConversationsRequestBuilder;
   messageRequestBuilder: CometChat.MessagesRequestBuilder;
   callSettingsBuilder: CometChat.CallSettingsBuilder;
+  userRequestBuilder: CometChat.UsersRequestBuilder;
 
   constructor() {
     this.conversationRequestBuilder =
       new CometChat.ConversationsRequestBuilder();
     this.callSettingsBuilder = new CometChat.CallSettingsBuilder();
     this.messageRequestBuilder = new CometChat.MessagesRequestBuilder();
+    this.userRequestBuilder = new CometChat.UsersRequestBuilder();
   }
 
   login = async (userID: string, name: string) => {
@@ -202,6 +204,11 @@ class ChatService {
 
   removeMessageListener = (listenerID: string) => {
     CometChat.removeMessageListener(listenerID);
+  };
+
+  getUsers = async () => {
+    const userRequest = this.userRequestBuilder.setLimit(30).build();
+    return await userRequest.fetchNext();
   };
 }
 

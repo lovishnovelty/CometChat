@@ -9,16 +9,17 @@ import {APP_ROUTES} from '../constants';
 import {recentChatListStyles} from '../styles';
 import {navigation} from '../utils';
 import {useAppSelector} from '../redux';
+import {CustomDivider} from './customDivider';
 
 export const RecentChatList = () => {
   const [chatList, setChatList] = useState<IConversation[]>([]);
-  const userID = useAppSelector(state => state.auth.userID);
+  const authState = useAppSelector(state => state.auth);
   const onTextMessageReceived = (message: CometChat.TextMessage) => {
     getChatList();
   };
 
   const getChatList = async () => {
-    const chatList = await chatService.getChatList(userID);
+    const chatList = await chatService.getChatList(authState.userID);
     setChatList(chatList);
   };
 
@@ -38,6 +39,8 @@ export const RecentChatList = () => {
 
   return (
     <View style={globalStyles.container}>
+      <Text style={globalStyles.heading}>Hello {authState.name}</Text>
+      <CustomDivider />
       <Text style={globalStyles.heading}>Recent Chats</Text>
       {chatList.length ? (
         <FlatList

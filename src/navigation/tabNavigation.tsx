@@ -34,11 +34,12 @@ export const TabNavigator = () => {
           <CustomAvatar url={incomingCallInitiator.avatar} size={50} />
           <CustomDivider size="xs" axis="horizontal" />
 
-          <View>
-            <Text style={globalStyles.title}>{incomingCallInitiator.name}</Text>
-            <Text>is Calling...</Text>
-          </View>
+          {/* <View> */}
+          <Text style={globalStyles.title}>{incomingCallInitiator.name}</Text>
+          <Text> is Calling...</Text>
+          {/* </View> */}
         </View>
+        <CustomDivider size="xs" />
         <View>
           <Button
             title="Accept"
