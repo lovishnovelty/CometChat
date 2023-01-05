@@ -4,13 +4,11 @@ import {mediaMessageStyles} from '../styles';
 
 export const MediaMessage = ({
   isSentByMe,
-  otherUserName,
+  message,
 }: {
   isSentByMe: boolean;
-  otherUserName: string;
+  message: string;
 }) => {
-  const initiator = isSentByMe ? 'You' : otherUserName;
-  const message = `${initiator} sent a file.`;
   return (
     <View
       style={[

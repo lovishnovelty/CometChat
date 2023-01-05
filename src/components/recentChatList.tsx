@@ -8,16 +8,19 @@ import {ChatListItem} from './recentChatListItem';
 import {APP_ROUTES} from '../constants';
 import {recentChatListStyles} from '../styles';
 import {navigation} from '../utils';
+import {useAppSelector} from '../redux';
 
 export const RecentChatList = () => {
   const [chatList, setChatList] = useState<IConversation[]>([]);
-
+  const userID = useAppSelector(state => state.auth.userID);
   const onTextMessageReceived = (message: CometChat.TextMessage) => {
     getChatList();
   };
 
   const getChatList = async () => {
-    const chatList = await chatService.getChatList();
+    const chatList = await chatService.getChatList(userID);
+    console.log(chatList);
+
     setChatList(chatList);
   };
 

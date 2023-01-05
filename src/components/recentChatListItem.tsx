@@ -20,7 +20,7 @@ export const ChatListItem = ({
         <Text style={recentChatListItemStyles.name}>
           {conversation.senderName}
         </Text>
-        <Text>{conversation.message}</Text>
+        <Text>{conversation.message.text}</Text>
       </View>
     </TouchableOpacity>
   );

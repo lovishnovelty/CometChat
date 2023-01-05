@@ -2,7 +2,9 @@ import {CometChat} from '@cometchat-pro/react-native-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 import {APP_ROUTES} from '../constants';
+import {CallType} from '../enums';
 import {IConversation, IModalHandle} from '../interfaces';
+import {IMessage} from '../interfaces/message';
 import {AppDispatch, setIncomingCall} from '../redux';
 import {navigation} from '../utils';
 
@@ -70,7 +72,7 @@ class ChatService {
     );
   };
 
-  getChatList = async (): Promise<IConversation[]> => {
+  getChatList = async (userID: string): Promise<IConversation[]> => {
     let limit: number = 30;
     const conversationRequest = this.conversationRequestBuilder
       .setLimit(limit)
@@ -78,15 +80,17 @@ class ChatService {
 
     // return fetchNext function so that it can be called on scroll
     const chatList = await conversationRequest.fetchNext();
-
-    return this.transformChatList(chatList);
+    return this.transformChatList(chatList, userID);
   };
 
-  transformChatList = (chatList: CometChat.Conversation[]) => {
+  transformChatList = (
+    chatList: CometChat.Conversation[],
+    userID: string,
+  ): IConversation[] => {
     return chatList.map(convo => {
       const sender = convo.getConversationWith() as CometChat.User;
       return {
-        message: 'convo.getLastMessage().getText()',
+        message: this.transformSingleMessage(convo.getLastMessage(), userID),
         senderName: sender.getName(),
         senderAvatar:
           sender.getAvatar() ??
@@ -97,20 +101,61 @@ class ChatService {
     });
   };
 
-  getMessage = async (userID: string) => {
-    console.log('get message list');
-
+  getMessagesByUID = async (userID: string) => {
     let limit = 30;
     const messageRequest = this.messageRequestBuilder
       .setLimit(limit)
       .setUID(userID)
       .build();
 
-    // transform to IMessage before returning
-    return await messageRequest.fetchPrevious().catch(err => {
+    const messageList = await messageRequest.fetchPrevious().catch(err => {
       console.log(err);
       return [];
     });
+    return this.transformMessages(messageList, userID);
+  };
+
+  transformMessages = (
+    messageList: CometChat.BaseMessage[],
+    userID: string,
+  ): IMessage[] => {
+    return messageList.map(item => {
+      return this.transformSingleMessage(item, userID);
+    });
+  };
+
+  transformSingleMessage = (
+    message: CometChat.BaseMessage,
+    userID: string,
+  ): IMessage => {
+    const isTextMessage = message instanceof CometChat.TextMessage;
+    const isMediaMessage = message instanceof CometChat.MediaMessage;
+    const isCallMessage = message instanceof CometChat.Call;
+    const isSentByMe = userID === message.getSender().getUid();
+    let initiatorName = message.getSender().getName();
+    if (isCallMessage) {
+      initiatorName = message.getCallInitiator().getName();
+    }
+    const messageInitiator = isSentByMe ? 'You' : initiatorName;
+    const callType = CallType.AUDIO;
+    const callMessage = `${messageInitiator} started a ${callType} call`;
+    const mediaMessage = `${messageInitiator} sent a file.`;
+    const text = isTextMessage
+      ? message.getText()
+      : isCallMessage
+      ? callMessage
+      : isMediaMessage
+      ? mediaMessage
+      : '';
+    return {
+      text,
+      initiatorName,
+      isSentByMe,
+      isTextMessage,
+      isCallMessage,
+      isMediaMessage,
+      callType,
+    };
   };
 
   sendTextMessage = async ({
