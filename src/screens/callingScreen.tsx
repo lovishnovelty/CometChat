@@ -9,7 +9,7 @@ import {chatService} from '../services';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 
 export const CallingScreen = ({route}: any) => {
-  const {sessionID, senderAvatar, senderName} = route.params;
+  const {sessionID, otherUserAvatar, otherUserName} = route.params;
 
   const onHangup = () => {
     chatService.rejectIncomingCall(sessionID, CometChat.CALL_STATUS.CANCELLED);
@@ -18,9 +18,9 @@ export const CallingScreen = ({route}: any) => {
 
   return (
     <View style={[globalStyles.container, callingScreenStyles.container]}>
-      <CustomAvatar url={senderAvatar} size={SizeConfig.screenWidth * 0.5} />
+      <CustomAvatar url={otherUserAvatar} size={SizeConfig.screenWidth * 0.5} />
       <CustomDivider />
-      <Text style={globalStyles.heading}>{senderName}</Text>
+      <Text style={globalStyles.heading}>{otherUserName}</Text>
       <CustomDivider />
       <Text>Calling...</Text>
       <CustomDivider size="large" />

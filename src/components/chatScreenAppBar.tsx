@@ -22,8 +22,8 @@ export const ChatScreenAppBar = ({
 
     navigation.navigate(APP_ROUTES.callingScreen, {
       sessionID: call.getSessionId(),
-      senderAvatar: conversation.senderAvatar,
-      senderName: conversation.otherUserName,
+      otherUserAvatar: conversation.otherUserAvatar,
+      otherUserName: conversation.otherUserName,
     });
   };
 
@@ -35,8 +35,8 @@ export const ChatScreenAppBar = ({
 
     navigation.navigate(APP_ROUTES.callingScreen, {
       sessionID: call.getSessionId(),
-      senderAvatar: conversation.senderAvatar,
-      senderName: conversation.otherUserName,
+      otherUserAvatar: conversation.otherUserAvatar,
+      otherUserName: conversation.otherUserName,
     });
   };
 
@@ -49,7 +49,7 @@ export const ChatScreenAppBar = ({
         color="black"
       />
       <View style={chatScreenAppBarStyles.detailContainer}>
-        <CustomAvatar url={conversation.senderAvatar} size={35} />
+        <CustomAvatar url={conversation.otherUserAvatar} size={35} />
         <CustomDivider axis="horizontal" size="xs" />
         <Text style={chatScreenAppBarStyles.name} numberOfLines={1}>
           {conversation.otherUserName}

@@ -15,7 +15,7 @@ export const ChatListItem = ({
     <TouchableOpacity
       style={recentChatListItemStyles.container}
       onPress={onPress}>
-      <CustomAvatar url={conversation.senderAvatar} size={40} />
+      <CustomAvatar url={conversation.otherUserAvatar} size={40} />
       <View style={recentChatListItemStyles.detailsContainer}>
         <Text style={recentChatListItemStyles.name}>
           {conversation.otherUserName}
