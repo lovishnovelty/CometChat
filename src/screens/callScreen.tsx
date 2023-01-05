@@ -1,5 +1,5 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import {chatService} from '../services';
 import {navigation} from '../utils';

@@ -10,8 +10,10 @@ import {recentChatListStyles} from '../styles';
 import {navigation} from '../utils';
 import {useAppSelector} from '../redux';
 import {CustomDivider} from './customDivider';
+import {useIsFocused} from '@react-navigation/native';
 
 export const RecentChatList = () => {
+  const isFocused = useIsFocused();
   const [chatList, setChatList] = useState<IConversation[]>([]);
   const authState = useAppSelector(state => state.auth);
   const onTextMessageReceived = (message: CometChat.TextMessage) => {
@@ -34,6 +36,9 @@ export const RecentChatList = () => {
       onTextMessageReceived,
       listenerID: 'recent_chat_list',
     });
+  }, []);
+
+  useEffect(() => {
     getChatList();
   }, []);
 
