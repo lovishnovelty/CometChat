@@ -65,6 +65,7 @@ export const ChatScreenInput = ({
     <View style={styles.container}>
       <TextInput
         value={text}
+        placeholder="Type here..."
         autoFocus
         style={[
           styles.input,
