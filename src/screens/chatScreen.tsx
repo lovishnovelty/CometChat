@@ -6,11 +6,13 @@ import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import {useAppSelector} from '../redux';
 import {chatService} from '../services';
+import {ChatUtility} from '../utils';
 
 export const ChatScreen = ({route}: any) => {
   const [messageList, setMessageList] = useState<IMessage[]>([]);
   const conversation: IConversation = route.params;
   const userID = useAppSelector(state => state.auth.userID);
+  const listenerID = conversation.otherUserID;
 
   const getMessageList = async () => {
     chatService
@@ -20,8 +22,27 @@ export const ChatScreen = ({route}: any) => {
       });
   };
 
+  const addMessageListener = () => {
+    chatService.listenForMessage({
+      listenerID,
+      onTextMessageReceived: textMessage => {
+        if (conversation.convoID === textMessage.getConversationId()) {
+          setMessageList(prev => [
+            ...prev,
+            ChatUtility.transformSingleMessage(textMessage, userID),
+          ]);
+        }
+      },
+    });
+  };
+
   useEffect(() => {
+    addMessageListener();
     getMessageList();
+
+    return () => {
+      chatService.removeMessageListener(listenerID);
+    };
   }, []);
 
   return (

@@ -11,8 +11,6 @@ export const ChatListItem = ({
   conversation: IConversation;
   onPress?: () => void;
 }) => {
-  console.log(conversation.message.isSentByMe);
-
   return (
     <TouchableOpacity
       style={recentChatListItemStyles.container}

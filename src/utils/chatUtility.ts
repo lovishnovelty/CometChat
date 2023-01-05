@@ -12,6 +12,7 @@ export class ChatUtility {
     return chatList.map(convo => {
       const otherUser = convo.getConversationWith() as CometChat.User;
       return {
+        convoID: convo.getConversationId(),
         message: this.transformSingleMessage(convo.getLastMessage(), userID),
         otherUserName: otherUser.getName(),
         otherUserAvatar: otherUser.getAvatar(),

@@ -27,7 +27,7 @@ export const RecentChatList = () => {
   };
 
   useEffect(() => {
-    chatService.initMessageListener({onTextMessageReceived});
+    chatService.listenForMessage({onTextMessageReceived});
     getChatList();
   }, []);
 

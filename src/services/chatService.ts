@@ -1,9 +1,7 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import moment from 'moment';
 import Config from 'react-native-config';
 import {APP_ROUTES} from '../constants';
-import {CallType} from '../enums';
 import {IConversation, IModalHandle} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import {AppDispatch, setIncomingCall} from '../redux';
@@ -54,10 +52,12 @@ class ChatService {
     }
   };
 
-  initMessageListener = async ({
+  listenForMessage = async ({
     onTextMessageReceived,
+    listenerID,
   }: {
     onTextMessageReceived: (textMessage: CometChat.TextMessage) => void;
+    listenerID: string;
   }) => {
     const userId = await AsyncStorage.getItem('userID');
 
@@ -66,7 +66,7 @@ class ChatService {
       return;
     }
     CometChat.addMessageListener(
-      userId,
+      listenerID,
       new CometChat.MessageListener({
         onTextMessageReceived: onTextMessageReceived,
       }),
@@ -229,6 +229,10 @@ class ChatService {
     }
     return result;
   }
+
+  removeMessageListener = (listenerID: string) => {
+    CometChat.removeMessageListener(listenerID);
+  };
 }
 
 export const chatService = new ChatService();

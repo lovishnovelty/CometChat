@@ -47,8 +47,6 @@ export const ChatScreenInput = ({
         message: text,
       })
       .then(message => {
-        console.log(message.text, 'success');
-
         // removeLocallyCreatedMessage();
         appendMessage(message);
       })
