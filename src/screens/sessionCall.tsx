@@ -19,6 +19,7 @@ export const SessionCall = () => {
       />
       <Button
         title="Join"
+        color={'coral'}
         onPress={() => {
           navigation.navigate(APP_ROUTES.callScreen, {sessionID});
         }}

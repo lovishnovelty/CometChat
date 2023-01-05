@@ -39,7 +39,7 @@ export const Login = () => {
       {isLogginIn ? (
         <ActivityIndicator style={{alignSelf: 'center'}} />
       ) : (
-        <Button title="Login" onPress={login} />
+        <Button color={'coral'} title="Login" onPress={login} />
       )}
     </KeyboardAwareScrollView>
   );

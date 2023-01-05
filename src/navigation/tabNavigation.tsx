@@ -43,6 +43,7 @@ export const TabNavigator = () => {
         <View>
           <Button
             title="Accept"
+            color={'green'}
             onPress={() => {
               incomingCallModalRef.current?.close();
               chatService.acceptIncomingCall(incomingCallID);
@@ -51,6 +52,7 @@ export const TabNavigator = () => {
           <CustomDivider size="xs" />
           <Button
             title="Reject"
+            color={'red'}
             onPress={() => {
               chatService.rejectIncomingCall(incomingCallID);
               incomingCallModalRef.current?.close();
