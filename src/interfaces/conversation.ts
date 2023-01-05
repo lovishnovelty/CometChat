@@ -1,7 +1,7 @@
 import {IMessage} from './message';
 
 export interface IConversation {
-  convoID: string;
+  id: string;
   message: IMessage;
   otherUserID: string;
   otherUserName: string;

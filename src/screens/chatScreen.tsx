@@ -26,7 +26,7 @@ export const ChatScreen = ({route}: any) => {
     chatService.listenForMessage({
       listenerID,
       onTextMessageReceived: textMessage => {
-        if (conversation.convoID === textMessage.getConversationId()) {
+        if (conversation.id === textMessage.getConversationId()) {
           setMessageList(prev => [
             ...prev,
             ChatUtility.transformSingleMessage(textMessage, userID),

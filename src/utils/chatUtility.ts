@@ -12,7 +12,7 @@ export class ChatUtility {
     return chatList.map(convo => {
       const otherUser = convo.getConversationWith() as CometChat.User;
       return {
-        convoID: convo.getConversationId(),
+        id: convo.getConversationId(),
         message: this.transformSingleMessage(convo.getLastMessage(), userID),
         otherUserName: otherUser.getName(),
         otherUserAvatar: otherUser.getAvatar(),
@@ -34,7 +34,7 @@ export class ChatUtility {
     message: CometChat.BaseMessage,
     userID: string,
   ): IMessage => {
-    const messageID = message.getId().toString();
+    const id = message.getId().toString();
     const isTextMessage = message instanceof CometChat.TextMessage;
     const isMediaMessage = message instanceof CometChat.MediaMessage;
     const isCallMessage = message instanceof CometChat.Call;
@@ -59,7 +59,7 @@ export class ChatUtility {
     const date = sentAt.format('D MMM');
 
     return {
-      messageID,
+      id,
       text,
       initiatorName,
       isSentByMe,

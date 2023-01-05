@@ -1,7 +1,7 @@
 import {CallType} from '../enums';
 
 export interface IMessage {
-  messageID: string;
+  id: string;
   text: string;
   initiatorName: string;
   isSentByMe: boolean;
