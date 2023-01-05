@@ -42,7 +42,9 @@ export const RecentChatList = () => {
 
   return (
     <View style={globalStyles.container}>
-      <Text style={globalStyles.heading}>Hello {authState.name}</Text>
+      <Text style={[globalStyles.heading, {fontSize: 22, fontWeight: '500'}]}>
+        Hello {authState.name},
+      </Text>
       <CustomDivider />
       <Text style={globalStyles.heading}>Recent Chats</Text>
       {chatList.length ? (
