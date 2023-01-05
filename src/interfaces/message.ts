@@ -8,4 +8,6 @@ export interface IMessage {
   isCallMessage: boolean;
   isMediaMessage: boolean;
   callType?: CallType;
+  time: string;
+  date: string;
 }

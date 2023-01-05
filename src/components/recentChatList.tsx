@@ -19,8 +19,6 @@ export const RecentChatList = () => {
 
   const getChatList = async () => {
     const chatList = await chatService.getChatList(userID);
-    console.log(chatList);
-
     setChatList(chatList);
   };
 

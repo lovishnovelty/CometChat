@@ -5,7 +5,4 @@ export interface IConversation {
   senderID: string;
   senderName: string;
   senderAvatar: string;
-
-  // move date to message
-  date: string;
 }

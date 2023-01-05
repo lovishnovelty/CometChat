@@ -1,5 +1,6 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 import Config from 'react-native-config';
 import {APP_ROUTES} from '../constants';
 import {CallType} from '../enums';
@@ -133,11 +134,9 @@ class ChatService {
     const isCallMessage = message instanceof CometChat.Call;
     const isSentByMe = userID === message.getSender().getUid();
     let initiatorName = message.getSender().getName();
-    if (isCallMessage) {
-      initiatorName = message.getCallInitiator().getName();
-    }
     const messageInitiator = isSentByMe ? 'You' : initiatorName;
     const callType = CallType.AUDIO;
+
     const callMessage = `${messageInitiator} started a ${callType} call`;
     const mediaMessage = `${messageInitiator} sent a file.`;
     const text = isTextMessage
@@ -147,6 +146,10 @@ class ChatService {
       : isMediaMessage
       ? mediaMessage
       : '';
+    const sentAt = moment(new Date(message.getSentAt()));
+    const time = sentAt.format('h a');
+    const date = sentAt.format('D MMM');
+
     return {
       text,
       initiatorName,
@@ -155,6 +158,8 @@ class ChatService {
       isCallMessage,
       isMediaMessage,
       callType,
+      time,
+      date,
     };
   };
 
