@@ -33,13 +33,12 @@ export class ChatUtility {
     message: CometChat.BaseMessage,
     userID: string,
   ): IMessage => {
+    const messageID = message.getId().toString();
     const isTextMessage = message instanceof CometChat.TextMessage;
     const isMediaMessage = message instanceof CometChat.MediaMessage;
     const isCallMessage = message instanceof CometChat.Call;
     const isSentByMe = userID === message.getSender().getUid();
     let initiatorName = message.getSender().getName();
-    console.log('senderID', message.getSender().getUid());
-    console.log('userID', userID);
 
     const messageInitiator = isSentByMe ? 'You' : initiatorName;
     const callType = CallType.AUDIO;
@@ -59,6 +58,7 @@ export class ChatUtility {
     const date = sentAt.format('D MMM');
 
     return {
+      messageID,
       text,
       initiatorName,
       isSentByMe,

@@ -17,7 +17,29 @@ export const ChatScreenInput = ({
   const [text, setText] = useState('');
   const userID = useAppSelector(state => state.auth.userID);
 
+  const removeLocallyCreatedMessage = () => {
+    setMessageList(prev => {
+      return prev.filter(item => item.messageID !== 'newMessage');
+    });
+  };
+
+  const appendMessage = (message: IMessage) => {
+    setMessageList(prev => [...prev, message]);
+  };
+
   const sendTextMessage = () => {
+    // add other field as well
+    const newMessage: IMessage = {
+      messageID: 'newMessage',
+      text: text,
+      initiatorName: '',
+      isSentByMe: true,
+      isTextMessage: true,
+      isCallMessage: false,
+      isMediaMessage: false,
+      time: '',
+      date: '',
+    };
     chatService
       .sendTextMessage({
         userID,
@@ -25,9 +47,16 @@ export const ChatScreenInput = ({
         message: text,
       })
       .then(message => {
-        setText('');
-        setMessageList(prev => [...prev, message]);
+        console.log(message.text, 'success');
+
+        // removeLocallyCreatedMessage();
+        appendMessage(message);
+      })
+      .catch(() => {
+        // removeLocallyCreatedMessage();
       });
+    appendMessage(newMessage);
+    setText('');
   };
 
   return (
