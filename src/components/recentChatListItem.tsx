@@ -1,6 +1,6 @@
 import React from 'react';
 import {IConversation} from '../interfaces';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {recentChatListItemStyles} from '../styles';
 import {CustomAvatar} from './customAvatar';
 

@@ -14,8 +14,6 @@ export const ChatScreen = ({route}: any) => {
   const userID = useAppSelector(state => state.auth.userID);
   const listenerID = conversation.otherUserID;
 
-  console.log(conversation.id, 'convo id');
-
   // used when chat screen is navigated from other place than recent chats as conversation is not available.
   const setConvoID = (id: string) => {
     if (conversation.id) return;
@@ -34,8 +32,6 @@ export const ChatScreen = ({route}: any) => {
     chatService.listenForMessage({
       listenerID,
       onTextMessageReceived: textMessage => {
-        console.log(conversation.id, textMessage.getConversationId());
-
         if (conversation.id === textMessage.getConversationId()) {
           setMessageList(prev => [
             ...prev,
