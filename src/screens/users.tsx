@@ -14,14 +14,13 @@ export const Users = () => {
 
   useEffect(() => {
     chatService.getUsers().then(users => {
-      console.log('usrs', users);
-
       setUsers(users);
     });
   }, []);
 
   const onUserPress = (user: CometChat.User) => {
     const conversation: Omit<IConversation, 'lastMessage'> = {
+      // id will be set in Chat screen when first message is sent
       id: '',
       otherUserID: user.getUid(),
       otherUserName: user.getName(),
@@ -34,7 +33,7 @@ export const Users = () => {
   return (
     <View style={globalStyles.container}>
       <Text style={globalStyles.heading}>Users</Text>
-      <CustomDivider />
+      <CustomDivider size="xs" />
       <FlatList
         data={users}
         contentContainerStyle={{flexGrow: 1}}

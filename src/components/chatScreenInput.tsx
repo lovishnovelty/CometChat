@@ -3,7 +3,7 @@ import {View, TextInput} from 'react-native';
 import {chatScreenInputStyles as styles} from '../styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IMessage} from '../interfaces/message';
-import {chatService} from '../services';
+import {AuthService, chatService} from '../services';
 import {useAppSelector} from '../redux';
 
 export const ChatScreenInput = ({
@@ -32,7 +32,7 @@ export const ChatScreenInput = ({
   const sendTextMessage = () => {
     // add other field as well
     const newMessage: IMessage = {
-      id: 'newMessage',
+      id: AuthService.createID(10),
       conversationID: '',
       text: text,
       initiatorName: '',
@@ -43,6 +43,7 @@ export const ChatScreenInput = ({
       time: '',
       date: '',
     };
+
     chatService
       .sendTextMessage({
         userID,
