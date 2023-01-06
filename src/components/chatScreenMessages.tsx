@@ -1,10 +1,8 @@
 import React, {useRef} from 'react';
-import {CometChat} from '@cometchat-pro/react-native-chat';
 import {chatScreenMessagesStyles as styles} from '../styles';
 import {TextMessage} from './textMessage';
 import {CallMessage} from './callMessage';
 import {MediaMessage} from './mediaMessage';
-import {useAppSelector} from '../redux';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {IMessage} from '../interfaces/message';
 
@@ -14,12 +12,16 @@ export const ChatScreenMessages = ({
   messageList: IMessage[];
 }) => {
   const listRef = useRef<KeyboardAwareFlatList>(null);
+
+  const scrollToEnd = () => {
+    listRef.current?.scrollToEnd();
+  };
+
   return (
     <KeyboardAwareFlatList
       ref={listRef}
-      onContentSizeChange={() => {
-        listRef.current?.scrollToEnd();
-      }}
+      onContentSizeChange={scrollToEnd}
+      onLayout={scrollToEnd}
       showsVerticalScrollIndicator={false}
       data={messageList}
       contentContainerStyle={styles.list}
