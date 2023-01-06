@@ -20,7 +20,7 @@ export const ChatListItem = ({
         <Text style={recentChatListItemStyles.name}>
           {conversation.otherUserName}
         </Text>
-        <Text>
+        <Text numberOfLines={2}>
           {conversation.lastMessage.isSentByMe &&
             conversation.lastMessage.isTextMessage &&
             'You: '}

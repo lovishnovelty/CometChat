@@ -17,7 +17,14 @@ export const TextMessage = ({
           ? textMessageStyles.sentContainer
           : textMessageStyles.receivedContainer,
       ]}>
-      <Text style={textMessageStyles.message}>{message}</Text>
+      <Text
+        style={
+          isSentByMe
+            ? textMessageStyles.sentMessage
+            : textMessageStyles.reveivedMessage
+        }>
+        {message}
+      </Text>
     </View>
   );
 };
