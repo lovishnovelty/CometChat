@@ -21,10 +21,10 @@ export const ChatListItem = ({
           {conversation.otherUserName}
         </Text>
         <Text>
-          {conversation.message.isSentByMe &&
-            conversation.message.isTextMessage &&
+          {conversation.lastMessage.isSentByMe &&
+            conversation.lastMessage.isTextMessage &&
             'You: '}
-          {conversation.message.text}
+          {conversation.lastMessage.text}
         </Text>
       </View>
     </TouchableOpacity>

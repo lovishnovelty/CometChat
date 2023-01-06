@@ -3,16 +3,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useEffect, useState} from 'react';
 import {Text} from 'react-native';
 import {APP_ROUTES} from '../constants';
-import {
-  restoreAuthState,
-  signIn,
-  useAppDispatch,
-  useAppSelector,
-} from '../redux';
-import {Home} from '../screens';
-import {ChatScreen, CallScreen, CallingScreen} from '../screens';
-import {AuthService, chatService} from '../services';
-import {Login} from '../styles/screens/login';
+import {restoreAuthState, useAppDispatch, useAppSelector} from '../redux';
+import {ChatScreen, CallScreen, CallingScreen, Login} from '../screens';
+import {AuthService} from '../services';
 import {navigation} from '../utils';
 import {TabNavigator} from './tabNavigation';
 
@@ -41,7 +34,6 @@ export const RootNavigation = () => {
           headerShown: false,
         }}>
         <RootStack.Screen name={APP_ROUTES.tab} component={TabNavigator} />
-        <RootStack.Screen name={APP_ROUTES.home} component={Home} />
         <RootStack.Screen name={APP_ROUTES.callScreen} component={CallScreen} />
         <RootStack.Screen name={APP_ROUTES.chatScreen} component={ChatScreen} />
         <RootStack.Screen

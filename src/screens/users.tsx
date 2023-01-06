@@ -7,6 +7,7 @@ import {CustomAvatar, CustomDivider} from '../components';
 import {IConversation} from '../interfaces';
 import {APP_ROUTES} from '../constants';
 import {navigation} from '../utils';
+import {userStyles} from '../styles';
 
 export const Users = () => {
   const [users, setUsers] = useState<CometChat.User[]>([]);
@@ -20,9 +21,8 @@ export const Users = () => {
   }, []);
 
   const onUserPress = (user: CometChat.User) => {
-    const conversation: IConversation = {
+    const conversation: Omit<IConversation, 'lastMessage'> = {
       id: '',
-      message: {},
       otherUserID: user.getUid(),
       otherUserName: user.getName(),
       otherUserAvatar: user.getAvatar(),
@@ -41,7 +41,7 @@ export const Users = () => {
         renderItem={({item}) => {
           return (
             <TouchableOpacity
-              style={styles.itemContainer}
+              style={userStyles.itemContainer}
               onPress={() => onUserPress(item)}>
               <CustomAvatar url={item.getAvatar()} />
               <CustomDivider axis="horizontal" size="xs" />
@@ -53,14 +53,3 @@ export const Users = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  itemContainer: {
-    marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'lightgrey',
-    paddingVertical: 15,
-  },
-});

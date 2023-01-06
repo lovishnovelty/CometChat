@@ -2,7 +2,7 @@ import {IMessage} from './message';
 
 export interface IConversation {
   id: string;
-  message: IMessage;
+  lastMessage: IMessage;
   otherUserID: string;
   otherUserName: string;
   otherUserAvatar: string;

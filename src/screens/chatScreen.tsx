@@ -14,8 +14,13 @@ export const ChatScreen = ({route}: any) => {
   const userID = useAppSelector(state => state.auth.userID);
   const listenerID = conversation.otherUserID;
 
+  console.log(conversation.id, 'convoID out');
+
   const setConvoID = (id: string) => {
+    console.log('setconvoID called', conversation.id);
+
     if (conversation.id === '') return;
+    console.log('convo id set to', conversation.id);
     conversation.id = id;
   };
 
@@ -31,7 +36,7 @@ export const ChatScreen = ({route}: any) => {
     chatService.listenForMessage({
       listenerID,
       onTextMessageReceived: textMessage => {
-        // console.log('received', textMessage);
+        console.log('received');
         console.log(conversation.id, textMessage.getConversationId());
 
         if (conversation.id === textMessage.getConversationId()) {

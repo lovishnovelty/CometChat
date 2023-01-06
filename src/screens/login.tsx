@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {Text, TextInput, Button, ActivityIndicator} from 'react-native';
-import {CustomDivider} from '../../components';
-import {useAppDispatch, signIn} from '../../redux';
-import {AuthService} from '../../services';
-import {globalStyles} from '../globalStyles';
+import {CustomDivider} from '../components';
+import {useAppDispatch, signIn} from '../redux';
+import {AuthService} from '../services';
+import {globalStyles} from '../styles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export const Login = () => {
