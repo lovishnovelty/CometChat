@@ -5,6 +5,7 @@ import {CallMessage} from './callMessage';
 import {MediaMessage} from './mediaMessage';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {IMessage} from '../interfaces/message';
+import {CallActionType} from '../enums';
 
 export const ChatScreenMessages = ({
   messageList,
@@ -23,7 +24,9 @@ export const ChatScreenMessages = ({
       onContentSizeChange={scrollToEnd}
       onLayout={scrollToEnd}
       showsVerticalScrollIndicator={false}
-      data={messageList}
+      data={messageList.filter(
+        message => message.callActionType !== CallActionType.ONGOING,
+      )}
       contentContainerStyle={styles.list}
       renderItem={({
         item: {isTextMessage, isSentByMe, text, isCallMessage},

@@ -1,4 +1,4 @@
-import {CallType} from '../enums';
+import {CallActionType, CallType} from '../enums';
 
 export interface IMessage {
   id: string;
@@ -10,6 +10,7 @@ export interface IMessage {
   isCallMessage: boolean;
   isMediaMessage: boolean;
   callType?: CallType;
+  callActionType?: CallActionType;
   time: string;
   date: string;
 }

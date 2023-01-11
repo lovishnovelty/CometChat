@@ -1,8 +1,9 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
-import {CallType} from '../enums';
+import {CallActionType, CallType} from '../enums';
 import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import moment from 'moment';
+import {capitalizeInitials} from './common';
 
 export class ChatUtility {
   static transformChatList = (
@@ -46,10 +47,32 @@ export class ChatUtility {
     let initiatorName = message.getSender().getName();
 
     const messageInitiator = isSentByMe ? 'You' : initiatorName;
-    const callType = CallType.AUDIO;
 
-    const callMessage = `${messageInitiator} started a ${callType} call`;
+    // call message configurations
+    let callType: CallType | undefined;
+    let callActionType: CallActionType | undefined;
+    let callMessage = '';
+    if (isCallMessage) {
+      callType = message.getType() as CallType;
+      callActionType = message.getAction() as CallActionType;
+      const article = callType === CallType.AUDIO ? 'an' : 'a';
+      switch (callActionType) {
+        case CallActionType.INITIATED:
+          callMessage = `${messageInitiator} started ${article} ${callType} call`;
+          break;
+        case CallActionType.ONGOING:
+          callMessage = `Ongoing Call.`;
+          break;
+        case CallActionType.ENDED:
+          callMessage = `${capitalizeInitials(callType)} call ended.`;
+          break;
+      }
+    }
+
+    // media message configurations
     const mediaMessage = `${messageInitiator} sent a file.`;
+
+    // selecting message based on message type
     const text = isTextMessage
       ? message.getText()
       : isCallMessage
@@ -72,6 +95,7 @@ export class ChatUtility {
       isCallMessage,
       isMediaMessage,
       callType,
+      callActionType,
       time,
       date,
     };
