@@ -4,4 +4,5 @@ export enum CallActionType {
   ENDED = 'ended',
   CANCELLED = 'cancelled',
   REJECTED = 'rejected',
+  UNANSWERED = 'unanswered',
 }

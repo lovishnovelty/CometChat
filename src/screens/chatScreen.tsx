@@ -25,6 +25,8 @@ export const ChatScreen = ({route}: any) => {
     chatService
       .getMessagesByUID(userID, conversation.otherUserID)
       .then(data => {
+        console.log(data.find(value => value.text === ''));
+
         setMessageList(data);
       });
   };

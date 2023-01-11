@@ -122,6 +122,10 @@ export class ChatUtility {
         missedCallUser = isSentByMe ? receiverName : 'You';
         callMessage = `${missedCallUser} missed ${article} ${callType} call.`;
         break;
+      case CallActionType.UNANSWERED:
+        missedCallUser = isSentByMe ? receiverName : 'You';
+        callMessage = `${missedCallUser} missed ${article} ${callType} call.`;
+        break;
       case CallActionType.REJECTED:
         missedCallUser = isSentByMe ? 'You' : receiverName;
         callMessage = `${missedCallUser} missed ${article} ${callType} call.`;
