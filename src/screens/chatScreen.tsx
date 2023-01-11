@@ -25,14 +25,6 @@ export const ChatScreen = ({route}: any) => {
     chatService
       .getMessagesByUID(userID, conversation.otherUserID)
       .then(data => {
-        console.log(
-          data.filter(
-            value =>
-              value.callActionType === CallActionType.CANCELLED ||
-              value.callActionType === CallActionType.REJECTED,
-          ),
-          data.length,
-        );
         setMessageList(data);
       });
   };

@@ -1,5 +1,6 @@
 import {CallActionType, CallType} from '../enums';
 
+// need to create separate config object for call and media
 export interface IMessage {
   id: string;
   conversationID: string;
