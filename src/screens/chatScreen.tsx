@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {KeyboardAvoidingView} from 'react-native';
 import {ChatScreenAppBar, ChatScreenMessages} from '../components';
 import {ChatScreenInput} from '../components';
+import {CallActionType} from '../enums';
 import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import {useAppSelector} from '../redux';
@@ -24,6 +25,14 @@ export const ChatScreen = ({route}: any) => {
     chatService
       .getMessagesByUID(userID, conversation.otherUserID)
       .then(data => {
+        console.log(
+          data.filter(
+            value =>
+              value.callActionType === CallActionType.CANCELLED ||
+              value.callActionType === CallActionType.REJECTED,
+          ),
+          data.length,
+        );
         setMessageList(data);
       });
   };

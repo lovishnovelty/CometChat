@@ -44,8 +44,8 @@ export class ChatUtility {
     const isMediaMessage = message instanceof CometChat.MediaMessage;
     const isCallMessage = message instanceof CometChat.Call;
     const isSentByMe = userID === message.getSender().getUid();
-    let initiatorName = message.getSender().getName();
-
+    const initiatorName = message.getSender().getName();
+    const receiverName = message.getReceiver().getName();
     const messageInitiator = isSentByMe ? 'You' : initiatorName;
 
     // call message configurations
@@ -55,18 +55,13 @@ export class ChatUtility {
     if (isCallMessage) {
       callType = message.getType() as CallType;
       callActionType = message.getAction() as CallActionType;
-      const article = callType === CallType.AUDIO ? 'an' : 'a';
-      switch (callActionType) {
-        case CallActionType.INITIATED:
-          callMessage = `${messageInitiator} started ${article} ${callType} call`;
-          break;
-        case CallActionType.ONGOING:
-          callMessage = `Ongoing Call.`;
-          break;
-        case CallActionType.ENDED:
-          callMessage = `${capitalizeInitials(callType)} call ended.`;
-          break;
-      }
+      callMessage = this.getCallMessage(
+        callType,
+        callActionType,
+        initiatorName,
+        receiverName,
+        isSentByMe,
+      );
     }
 
     // media message configurations
@@ -90,6 +85,7 @@ export class ChatUtility {
       conversationID,
       text,
       initiatorName,
+      receiverName,
       isSentByMe,
       isTextMessage,
       isCallMessage,
@@ -99,5 +95,38 @@ export class ChatUtility {
       time,
       date,
     };
+  };
+
+  static getCallMessage = (
+    callType: CallType,
+    callActionType: CallActionType,
+    initiatorName: string,
+    receiverName: string,
+    isSentByMe: boolean,
+  ): string => {
+    let callMessage = '';
+    const article = callType === CallType.AUDIO ? 'an' : 'a';
+    const callInitiator = isSentByMe ? 'You' : initiatorName;
+    let missedCallUser = ''; // user who missed the call
+    switch (callActionType) {
+      case CallActionType.INITIATED:
+        callMessage = `${callInitiator} started ${article} ${callType} call.`;
+        break;
+      case CallActionType.ONGOING:
+        callMessage = `Ongoing Call.`;
+        break;
+      case CallActionType.ENDED:
+        callMessage = `${capitalizeInitials(callType)} call ended.`;
+        break;
+      case CallActionType.CANCELLED:
+        missedCallUser = isSentByMe ? receiverName : 'You';
+        callMessage = `${missedCallUser} missed ${article} ${callType} call.`;
+        break;
+      case CallActionType.REJECTED:
+        missedCallUser = isSentByMe ? 'You' : receiverName;
+        callMessage = `${missedCallUser} missed ${article} ${callType} call.`;
+        break;
+    }
+    return callMessage;
   };
 }

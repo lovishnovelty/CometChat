@@ -5,6 +5,7 @@ export interface IMessage {
   conversationID: string;
   text: string;
   initiatorName: string;
+  receiverName: string;
   isSentByMe: boolean;
   isTextMessage: boolean;
   isCallMessage: boolean;
