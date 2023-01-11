@@ -27,16 +27,17 @@ export const TabNavigator = () => {
 
   return (
     <>
+      {/* need to create separate com */}
       <CustomModal ref={incomingCallModalRef}>
         <Text style={globalStyles.heading}>Incoming call.</Text>
         <CustomDivider size="xs" />
         <View style={homeStyles.detailContainer}>
           <CustomAvatar url={incomingCallInitiator.avatar} size={50} />
-          <CustomDivider value={10} axis="horizontal" />
+          <CustomDivider value={5} axis="horizontal" />
 
           {/* <View> */}
           <Text style={globalStyles.title}>{incomingCallInitiator.name}</Text>
-          <Text> is Calling...</Text>
+          <Text> is calling...</Text>
           {/* </View> */}
         </View>
         <CustomDivider value={10} />
