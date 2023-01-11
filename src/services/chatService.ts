@@ -52,6 +52,12 @@ class ChatService {
       listenerID,
       new CometChat.MessageListener({
         onTextMessageReceived: onTextMessageReceived,
+        onMediaMessageReceived: (mediaMessage: CometChat.MediaMessage) => {
+          console.log('Media message received successfully', mediaMessage);
+        },
+        onCustomMessageReceived: (customMessage: CometChat.CustomMessage) => {
+          console.log('Custom message received successfully', customMessage);
+        },
       }),
     );
   };
@@ -161,7 +167,6 @@ class ChatService {
       'listnerId',
       new CometChat.CallListener({
         onIncomingCallReceived: (incomingCall: CometChat.Call) => {
-          console.log('inititator', incomingCall.getCallInitiator());
           dispatch(
             setIncomingCall({
               incomingCallID: incomingCall.getSessionId(),

@@ -8,15 +8,17 @@ import {IConversation} from '../interfaces';
 import {APP_ROUTES} from '../constants';
 import {navigation} from '../utils';
 import {userStyles} from '../styles';
+import {useIsFocused} from '@react-navigation/native';
 
 export const Users = () => {
   const [users, setUsers] = useState<CometChat.User[]>([]);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     chatService.getUsers().then(users => {
       setUsers(users);
     });
-  }, []);
+  }, [isFocused]);
 
   const onUserPress = (user: CometChat.User) => {
     const conversation: Omit<IConversation, 'lastMessage'> = {

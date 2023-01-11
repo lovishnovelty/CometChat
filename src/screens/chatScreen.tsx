@@ -15,18 +15,10 @@ export const ChatScreen = ({route}: any) => {
   const userID = useAppSelector(state => state.auth.userID);
   const listenerID = conversation.otherUserID;
 
-  // used when chat screen is navigated from other place than recent chats as conversation is not available.
-  const setConvoID = (id: string) => {
-    if (conversation.id) return;
-    conversation.id = id;
-  };
-
   const getMessageList = async () => {
     chatService
       .getMessagesByUID(userID, conversation.otherUserID)
       .then(data => {
-        console.log(data.find(value => value.text === ''));
-
         setMessageList(data);
       });
   };
@@ -35,7 +27,14 @@ export const ChatScreen = ({route}: any) => {
     chatService.listenForMessage({
       listenerID,
       onTextMessageReceived: textMessage => {
-        if (conversation.id === textMessage.getConversationId()) {
+        const receiverType = textMessage.getReceiverType();
+        if (receiverType === 'group') return;
+        const senderID = textMessage.getSender().getUid();
+        const receiverID = textMessage.getReceiverId();
+        if (
+          conversation.otherUserID === senderID ||
+          conversation.otherUserID === receiverID
+        ) {
           setMessageList(prev => [
             ...prev,
             ChatUtility.transformSingleMessage(textMessage, userID),
@@ -60,7 +59,6 @@ export const ChatScreen = ({route}: any) => {
       <ChatScreenMessages messageList={messageList} />
       <ChatScreenInput
         setMessageList={setMessageList}
-        setConvoID={setConvoID}
         receiverID={conversation.otherUserID}
       />
     </KeyboardAvoidingView>

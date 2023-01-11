@@ -8,10 +8,8 @@ import {useAppSelector} from '../redux';
 
 export const ChatScreenInput = ({
   setMessageList,
-  setConvoID,
   receiverID,
 }: {
-  setConvoID: (id: string) => void;
   setMessageList: React.Dispatch<React.SetStateAction<IMessage[]>>;
   receiverID: string;
 }) => {
@@ -42,6 +40,7 @@ export const ChatScreenInput = ({
       isMediaMessage: false,
       time: '',
       date: '',
+      receiverName: '',
     };
 
     chatService
@@ -51,7 +50,6 @@ export const ChatScreenInput = ({
         message: text,
       })
       .then(message => {
-        setConvoID(message.conversationID);
         // removeLocallyCreatedMessage();
         // appendMessage(message);
       })

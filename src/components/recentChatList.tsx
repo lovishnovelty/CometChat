@@ -17,6 +17,7 @@ export const RecentChatList = () => {
   const [chatList, setChatList] = useState<IConversation[]>([]);
   const authState = useAppSelector(state => state.auth);
   const onTextMessageReceived = (message: CometChat.TextMessage) => {
+    console.log('Text message received successfully', message);
     getChatList();
   };
 
