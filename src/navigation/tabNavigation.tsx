@@ -27,7 +27,7 @@ export const TabNavigator = () => {
 
   return (
     <>
-      {/* need to create separate com */}
+      {/* need to create separate component */}
       <CustomModal ref={incomingCallModalRef}>
         <Text style={globalStyles.heading}>Incoming call.</Text>
         <CustomDivider size="xs" />

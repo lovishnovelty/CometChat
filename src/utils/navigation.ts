@@ -29,6 +29,21 @@ class Navigation {
   pop = () => {
     this.navigationRef.dispatch(StackActions.pop());
   };
+
+  reset = ({
+    index,
+    routeName,
+    params,
+  }: {
+    index: number;
+    routeName: string;
+    params?: any;
+  }) => {
+    this.navigationRef.reset({
+      index,
+      routes: [{name: routeName, params}],
+    });
+  };
 }
 
 export const navigation = new Navigation();

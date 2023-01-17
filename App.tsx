@@ -4,7 +4,9 @@ import {RootNavigation} from './src/navigation/rootNavigation';
 import {chatService} from './src/services';
 import {Provider} from 'react-redux';
 import {signIn, store, useAppDispatch} from './src/redux';
-
+import {NotificationService} from './src/services/notification/notificationService';
+import messaging from '@react-native-firebase/messaging';
+import {CometChat} from '@cometchat-pro/react-native-chat';
 const getPermissions = async () => {
   if (Platform.OS === 'android') {
     await PermissionsAndroid.requestMultiple([
@@ -19,6 +21,10 @@ const getPermissions = async () => {
 const App = () => {
   useEffect(() => {
     getPermissions();
+    NotificationService.setupFCM();
+    messaging().onTokenRefresh(fcmToken => {
+      CometChat.registerTokenForPushNotification(fcmToken);
+    });
   }, []);
 
   return (

@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-
+apply plugin: "com.google.gms.google-services"
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
@@ -226,7 +226,7 @@ android {
    
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -256,7 +256,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-
+    
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    implementation 'com.google.firebase:firebase-analytics'
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

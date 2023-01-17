@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "209774310922",
+    "project_id": "chat-module-8d2a6",
+    "storage_bucket": "chat-module-8d2a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209774310922:android:39237a57c29c09d05cd1f3",
+        "android_client_info": {
+          "package_name": "com.cometchatpoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209774310922-pke6qj80btp15863t7j4drovai66i68b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cometchatpoc",
+            "certificate_hash": "88d125ee080dda8ed911e2eb122159e628b6387a"
+          }
+        },
+        {
+          "client_id": "209774310922-gl8p90c8e95d56f8mu9o72lnc042q1gl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRlXc3rFP3_JKqVblMtJSasCUwZhjlE4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209774310922-gl8p90c8e95d56f8mu9o72lnc042q1gl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -70,6 +70,7 @@ class ChatService {
 
     // return fetchNext function so that it can be called on scroll
     const chatList = await conversationRequest.fetchNext();
+
     return ChatUtility.transformChatList(chatList, userID);
   };
 
@@ -198,6 +199,11 @@ class ChatService {
     navigation.navigate(APP_ROUTES.callScreen, {
       sessionID: acceptedCall.getSessionId(),
     });
+  };
+
+  acceptIncomingCallFromBackground = async (sessionId: string) => {
+    const acceptedCall = await CometChat.acceptCall(sessionId);
+    navigation.reset({index: 0, routeName: APP_ROUTES.callScreen});
   };
 
   rejectIncomingCall = (
