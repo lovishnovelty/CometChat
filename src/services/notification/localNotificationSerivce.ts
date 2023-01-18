@@ -1,5 +1,6 @@
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification, {
+  PushNotificationDeliveredObject,
   PushNotificationObject,
   ReceivedNotification,
 } from 'react-native-push-notification';
@@ -51,6 +52,7 @@ export class LocalNotificationServices {
     date,
     payload,
     largeIconUrl,
+    tag,
   }: {
     id?: string;
     title: string;
@@ -58,6 +60,7 @@ export class LocalNotificationServices {
     date?: Date;
     payload?: any;
     largeIconUrl?: string;
+    tag?: string;
   }) => {
     const config: PushNotificationObject = {
       id,
@@ -66,6 +69,7 @@ export class LocalNotificationServices {
       channelId: 'local',
       userInfo: payload,
       largeIconUrl,
+      tag,
     };
 
     if (date) {
@@ -80,5 +84,19 @@ export class LocalNotificationServices {
 
   static cancelScheduledNotification = (id: string) => {
     PushNotification.cancelLocalNotification(id);
+  };
+
+  static removeDeliveredNotifications = (identifiers: string[]) => {
+    PushNotification.removeDeliveredNotifications(identifiers);
+  };
+
+  static removeAllDeliveredNotifications = () => {
+    PushNotification.removeAllDeliveredNotifications();
+  };
+
+  static getDeliveredNotifications = (
+    callback: (notifications: PushNotificationDeliveredObject[]) => void,
+  ) => {
+    PushNotification.getDeliveredNotifications(callback);
   };
 }

@@ -6,18 +6,18 @@ import {CallActionType} from '../enums';
 import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import {useAppSelector} from '../redux';
-import {chatService} from '../services';
+import {ChatNotificaitonHandler, chatService} from '../services';
 import {ChatUtility} from '../utils';
 
 export const ChatScreen = ({route}: any) => {
   const [messageList, setMessageList] = useState<IMessage[]>([]);
   const conversation: IConversation = route.params;
-  const userID = useAppSelector(state => state.auth.userID);
+  const authState = useAppSelector(state => state.auth);
   const listenerID = conversation.otherUserID;
 
   const getMessageList = async () => {
     chatService
-      .getMessagesByUID(userID, conversation.otherUserID)
+      .getMessagesByUID(authState.userID, conversation.otherUserID)
       .then(data => {
         setMessageList(data);
       });
@@ -38,7 +38,7 @@ export const ChatScreen = ({route}: any) => {
           conversation.id = textMessage.getConversationId();
           setMessageList(prev => [
             ...prev,
-            ChatUtility.transformSingleMessage(textMessage, userID),
+            ChatUtility.transformSingleMessage(textMessage, authState.userID),
           ]);
         }
       },
@@ -48,7 +48,9 @@ export const ChatScreen = ({route}: any) => {
   useEffect(() => {
     addMessageListener();
     getMessageList();
-
+    ChatNotificaitonHandler.removeNotificationsByUserName(
+      conversation.otherUserName,
+    );
     return () => {
       chatService.removeMessageListener(listenerID);
     };

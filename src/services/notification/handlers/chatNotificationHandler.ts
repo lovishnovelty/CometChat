@@ -39,6 +39,7 @@ export class ChatNotificaitonHandler {
           callType,
           callInitiator: this.callInitiator,
         };
+
         RNNotificationCall.displayNotification(this.sessionID, null, 30000, {
           channelId: 'com.cometchatpoc.noti',
           channelName: `Incoming ${callType} call`,
@@ -65,6 +66,8 @@ export class ChatNotificaitonHandler {
     remoteMessage: FirebaseMessagingTypes.RemoteMessage,
   ) => {
     try {
+      console.log(remoteMessage);
+
       if (!remoteMessage.data) return;
       const msg = await CometChat.CometChatHelper.processMessage(
         JSON.parse(remoteMessage.data.message),
@@ -76,7 +79,16 @@ export class ChatNotificaitonHandler {
       );
       if (message.isCallMessage) return;
       const otherUser = msg.getSender();
+
+      // first remove the notifications from firebase from notification tray
+      this.removeFirebaseNotificationsByUserName(
+        remoteMessage.notification?.title ?? '',
+        remoteMessage.notification?.body ?? '',
+        otherUser.getUid(),
+      );
+
       LocalNotificationServices.setLocalNotification({
+        tag: otherUser.getUid(),
         title: message.initiatorName,
         message: message.text,
         largeIconUrl:
@@ -155,6 +167,41 @@ export class ChatNotificaitonHandler {
   private static listenForRejectedCall = () => {
     RNNotificationCall.addEventListener('endCall', () => {
       chatService.rejectIncomingCall(this.sessionID);
+    });
+  };
+
+  static removeNotificationsByUserName = (userName: string) => {
+    LocalNotificationServices.getDeliveredNotifications(notifications => {
+      const userNotifications = notifications.filter(notification => {
+        return notification.title === userName;
+      });
+
+      const identifiers = userNotifications.map(
+        notification => notification.identifier,
+      );
+      LocalNotificationServices.removeDeliveredNotifications(identifiers);
+    });
+  };
+
+  static removeFirebaseNotificationsByUserName = (
+    title: string,
+    body: string,
+    userId: string,
+  ) => {
+    LocalNotificationServices.getDeliveredNotifications(notifications => {
+      const notificationsToRemove = notifications.filter(notification => {
+        return (
+          notification.title === title &&
+          notification.tag !== userId &&
+          notification.body === body
+        );
+      });
+      console.log(notificationsToRemove);
+
+      const identifiers = notificationsToRemove.map(
+        notification => notification.identifier,
+      );
+      LocalNotificationServices.removeDeliveredNotifications(identifiers);
     });
   };
 }

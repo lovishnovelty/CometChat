@@ -1,4 +1,5 @@
 import messaging, {
+  firebase,
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import {ChatNotificaitonHandler} from './';
