@@ -2,7 +2,7 @@ import {CometChat} from '@cometchat-pro/react-native-chat';
 import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {CallActionType, CallType} from '../../../enums';
 import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
-import {name as appName} from '../../../../app.json';
+import RNCallKeep from 'react-native-callkeep';
 import {chatService} from '../../chatService';
 import {ICallNotificationPayload} from '../../../interfaces/customIncomingCallProps';
 
@@ -34,17 +34,16 @@ export class ChatNotificaitonHandler {
           callType,
           callInitiator: this.callInitiator,
         };
-
         RNNotificationCall.displayNotification(this.sessionID, null, 30000, {
-          channelId: 'com.cometchatpoc',
+          channelId: 'com.cometchatpoc.noti',
           channelName: `Incoming ${callType} call`,
           notificationIcon: 'ic_launcher', //mipmap
-          notificationTitle: 'Incoming call',
+          notificationTitle: `Incoming ${callType} call`,
           notificationBody: `${this.callInitiator} is calling.`,
           answerText: 'Answer',
           declineText: 'Decline',
-          // notificationColor: 'colorAccent',
-          // notificationSound: 'skype_ring', //raw
+          notificationColor: 'colorAccent',
+          notificationSound: 'ringtone',
           mainComponent: 'incomingCall',
           payload: JSON.stringify(payload),
         });
@@ -64,7 +63,8 @@ export class ChatNotificaitonHandler {
 
   private static listenForAnsweredCall = () => {
     RNNotificationCall.addEventListener('answer', () => {
-      RNNotificationCall.backToApp();
+      // RNNotificationCall.backToApp();
+      RNCallKeep.backToForeground();
       chatService.acceptIncomingCall(this.sessionID);
     });
   };

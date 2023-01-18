@@ -1,7 +1,8 @@
 import React, {useRef, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text, View, Button} from 'react-native';
+import {Text, View, Button, DeviceEventEmitter} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
 import {APP_ROUTES} from '../constants';
 import {Home, SessionCall, Users} from '../screens';
 import {IModalHandle} from '../interfaces';
@@ -23,6 +24,19 @@ export const TabNavigator = () => {
 
   useEffect(() => {
     chatService.listenForCall(incomingCallModalRef, dispatch);
+
+    RNNotificationCall.addEventListener('answer', () => {
+      incomingCallModalRef.current?.close();
+    });
+
+    RNNotificationCall.addEventListener('endCall', () => {
+      incomingCallModalRef.current?.close();
+    });
+
+    return () => {
+      RNNotificationCall.removeEventListener('answer');
+      RNNotificationCall.removeEventListener('endCall');
+    };
   }, []);
 
   return (
