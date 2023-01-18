@@ -4,7 +4,7 @@ import {TextMessage} from './textMessage';
 import {CallMessage} from './callMessage';
 import {MediaMessage} from './mediaMessage';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
-import {IMessage} from '../interfaces/message';
+import {IMessage} from '../interfaces/';
 import {CallActionType} from '../enums';
 
 export const ChatScreenMessages = ({

@@ -1,7 +1,6 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import {CallActionType, CallType} from '../enums';
-import {IConversation} from '../interfaces';
-import {IMessage} from '../interfaces/message';
+import {IConversation, IMessage} from '../interfaces';
 import moment from 'moment';
 import {capitalizeInitials} from './common';
 

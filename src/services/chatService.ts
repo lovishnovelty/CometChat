@@ -2,8 +2,7 @@ import {CometChat} from '@cometchat-pro/react-native-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 import {APP_ROUTES} from '../constants';
-import {IConversation, IModalHandle} from '../interfaces';
-import {IMessage} from '../interfaces/message';
+import {IConversation, IModalHandle, IMessage} from '../interfaces';
 import {AppDispatch, setIncomingCall} from '../redux';
 import {ChatUtility, navigation} from '../utils';
 
