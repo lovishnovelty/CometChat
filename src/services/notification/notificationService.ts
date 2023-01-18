@@ -35,8 +35,8 @@ export class NotificationService {
   };
 
   static setupFCM = async () => {
-    await messaging().requestPermission();
-
+    const perm = await messaging().requestPermission();
+    console.log(perm, 'permission');
     this.foregroundHandler();
     this.backgroundHandler();
     this.quitStateHandler();

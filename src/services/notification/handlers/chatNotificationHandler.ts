@@ -4,6 +4,7 @@ import {CallActionType, CallType} from '../../../enums';
 import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
 import {name as appName} from '../../../../app.json';
 import {chatService} from '../../chatService';
+import {ICallNotificationPayload} from '../../../interfaces/customIncomingCallProps';
 
 export class ChatNotificaitonHandler {
   private static sessionID: string;
@@ -23,22 +24,29 @@ export class ChatNotificaitonHandler {
       if (!isCallMessage) return;
 
       const callMessage = message as CometChat.Call;
+      const callType = callMessage.getType() as CallType;
       const callActionType = callMessage.getAction() as CallActionType;
       if (callActionType === CallActionType.INITIATED) {
         this.sessionID = callMessage.getSessionId();
         this.callInitiator = callMessage.getCallInitiator().getName();
 
+        const payload: ICallNotificationPayload = {
+          callType,
+          callInitiator: this.callInitiator,
+        };
+
         RNNotificationCall.displayNotification(this.sessionID, null, 30000, {
           channelId: 'com.cometchatpoc',
-          channelName: 'Incoming video call',
+          channelName: `Incoming ${callType} call`,
           notificationIcon: 'ic_launcher', //mipmap
           notificationTitle: 'Incoming call',
           notificationBody: `${this.callInitiator} is calling.`,
           answerText: 'Answer',
           declineText: 'Decline',
-          notificationColor: 'colorAccent',
-          notificationSound: 'skype_ring', //raw
-          mainComponent: appName,
+          // notificationColor: 'colorAccent',
+          // notificationSound: 'skype_ring', //raw
+          mainComponent: 'incomingCall',
+          payload: JSON.stringify(payload),
         });
       } else {
         RNNotificationCall.declineCall('');
@@ -57,7 +65,7 @@ export class ChatNotificaitonHandler {
   private static listenForAnsweredCall = () => {
     RNNotificationCall.addEventListener('answer', () => {
       RNNotificationCall.backToApp();
-      setTimeout(() => chatService.acceptIncomingCall(this.sessionID), 0);
+      chatService.acceptIncomingCall(this.sessionID);
     });
   };
 

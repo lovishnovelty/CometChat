@@ -13,6 +13,7 @@ import {
   NotificationService,
   LocalNotificationServices,
 } from './src/services/';
+import {CustomIncomingCall} from './src/components';
 
 console.log('cc', Config);
 var appSetting = new CometChat.AppSettingsBuilder()
@@ -73,4 +74,5 @@ messaging().setBackgroundMessageHandler(
   NotificationService.backgroundMessageHandler,
 );
 
+AppRegistry.registerComponent('incomingCall', () => CustomIncomingCall);
 AppRegistry.registerComponent(appName, () => App);

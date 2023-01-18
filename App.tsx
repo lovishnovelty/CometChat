@@ -7,6 +7,7 @@ import {signIn, store, useAppDispatch} from './src/redux';
 import {NotificationService} from './src/services/notification/notificationService';
 import messaging from '@react-native-firebase/messaging';
 import {CometChat} from '@cometchat-pro/react-native-chat';
+import {CustomIncomingCall} from './src/components';
 const getPermissions = async () => {
   if (Platform.OS === 'android') {
     await PermissionsAndroid.requestMultiple([
@@ -15,6 +16,7 @@ const getPermissions = async () => {
       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
     ]);
+    await PermissionsAndroid.request('android.permission.POST_NOTIFICATIONS');
   }
 };
 

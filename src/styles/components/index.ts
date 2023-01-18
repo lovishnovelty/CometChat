@@ -7,3 +7,4 @@ export * from './textMessageStyles';
 export * from './mediaMessageStyles';
 export * from './callMessageStyles';
 export * from './chatScreenInputStyles';
+export * from './customIncomingCallStyles';
