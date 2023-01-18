@@ -8,7 +8,7 @@ import {navigation} from '../utils';
 import {chatService} from '../services';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 
-export const CallingScreen = ({route}: any) => {
+export const OutgoingCallScreen = ({route}: any) => {
   const {sessionID, otherUserAvatar, otherUserName} = route.params;
 
   const onHangup = () => {

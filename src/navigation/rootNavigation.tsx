@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import {Text} from 'react-native';
 import {APP_ROUTES} from '../constants';
 import {restoreAuthState, useAppDispatch, useAppSelector} from '../redux';
-import {ChatScreen, CallScreen, CallingScreen, Login} from '../screens';
+import {ChatScreen, CallScreen, OutgoingCallScreen, Login} from '../screens';
 import {AuthService} from '../services';
 import {navigation} from '../utils';
 import {TabNavigator} from './tabNavigation';
@@ -38,7 +38,7 @@ export const RootNavigation = () => {
         <RootStack.Screen name={APP_ROUTES.chatScreen} component={ChatScreen} />
         <RootStack.Screen
           name={APP_ROUTES.callingScreen}
-          component={CallingScreen}
+          component={OutgoingCallScreen}
         />
       </RootStack.Navigator>
     </NavigationContainer>

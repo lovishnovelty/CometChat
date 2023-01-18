@@ -34,6 +34,10 @@ export class NotificationService {
     ChatNotificaitonHandler.handleNotification(remoteMessage);
   };
 
+  static onTokenRefresh = (listener: (token: string) => any) => {
+    messaging().onTokenRefresh(listener);
+  };
+
   static setupFCM = async () => {
     await messaging().requestPermission();
 

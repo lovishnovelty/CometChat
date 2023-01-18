@@ -13,7 +13,7 @@ import {
   NotificationService,
   LocalNotificationServices,
 } from './src/services/';
-import {CustomIncomingCall} from './src/components';
+import {IncomingCallScreen} from './src/screens';
 
 console.log('cc', Config);
 var appSetting = new CometChat.AppSettingsBuilder()
@@ -34,39 +34,6 @@ CometChat.init(Config.APP_ID, appSetting).then(
   },
 );
 
-// const options = {
-//   ios: {
-//     appName: 'My app name',
-//   },
-//   android: {
-//     alertTitle: 'Permissions required',
-//     alertDescription: 'This application needs to access your phone accounts',
-//     cancelButton: 'Cancel',
-//     okButton: 'ok',
-//     imageName: 'phone_account_icon',
-
-//     foregroundService: {
-//       channelId: 'com.cometchatpoc',
-//       channelName: 'cometchat',
-//       // notificationTitle: 'Title',
-//       // notificationIcon: 'Path to the resource icon of the notification',
-//     },
-//   },
-// };
-// RNCallKeep.setup(options).then(() => {
-//   console.log('rn call keep setup');
-// });
-// let sessionID = '';
-// RNCallKeep.setAvailable(true);
-// RNCallKeep.addEventListener('answerCall', () => {
-//   RNCallKeep.backToForeground();
-//   setTimeout(() => chatService.acceptIncomingCall(sessionID), 2000);
-// });
-// RNCallKeep.addEventListener('endCall', () => {
-//   RNCallKeep.backToForeground();
-//   setTimeout(() => chatService.rejectIncomingCall(sessionID), 2000);
-// });
-
 // listeners for when the user accepts or reject calls when the app is in background or quit state through notification
 ChatNotificaitonHandler.attachListeners();
 
@@ -74,5 +41,5 @@ messaging().setBackgroundMessageHandler(
   NotificationService.backgroundMessageHandler,
 );
 
-AppRegistry.registerComponent('incomingCall', () => CustomIncomingCall);
+AppRegistry.registerComponent('incomingCall', () => IncomingCallScreen);
 AppRegistry.registerComponent(appName, () => App);

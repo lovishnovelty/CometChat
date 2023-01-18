@@ -23,7 +23,7 @@ const App = () => {
   useEffect(() => {
     getPermissions();
     NotificationService.setupFCM();
-    messaging().onTokenRefresh(fcmToken => {
+    NotificationService.onTokenRefresh(fcmToken => {
       CometChat.registerTokenForPushNotification(fcmToken);
     });
   }, []);

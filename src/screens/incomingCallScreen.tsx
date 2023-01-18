@@ -7,10 +7,10 @@ import {
   ICustomIncomingCallProps,
 } from '../interfaces/customIncomingCallProps';
 import {customIncomingCallStyles as styles, globalStyles} from '../styles';
-import {CustomAvatar} from './customAvatar';
-import {CustomDivider} from './customDivider';
+import {CustomAvatar} from '../components/customAvatar';
+import {CustomDivider} from '../components/customDivider';
 
-export const CustomIncomingCall = (props: ICustomIncomingCallProps) => {
+export const IncomingCallScreen = (props: ICustomIncomingCallProps) => {
   const payload: ICallNotificationPayload = JSON.parse(props.payload);
 
   return (
