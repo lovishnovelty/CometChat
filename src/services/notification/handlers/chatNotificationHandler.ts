@@ -79,6 +79,9 @@ export class ChatNotificaitonHandler {
       LocalNotificationServices.setLocalNotification({
         title: message.initiatorName,
         message: message.text,
+        largeIconUrl:
+          otherUser.getAvatar() ??
+          'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
         payload: {
           navigationProps: {
             // id will be set in Chat screen

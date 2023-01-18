@@ -50,12 +50,14 @@ export class LocalNotificationServices {
     message,
     date,
     payload,
+    largeIconUrl,
   }: {
     id?: string;
     title: string;
     message: string;
     date?: Date;
     payload?: any;
+    largeIconUrl?: string;
   }) => {
     const config: PushNotificationObject = {
       id,
@@ -63,6 +65,7 @@ export class LocalNotificationServices {
       message,
       channelId: 'local',
       userInfo: payload,
+      largeIconUrl,
     };
 
     if (date) {
