@@ -5,12 +5,17 @@ import RNNotificationCall from 'react-native-full-screen-notification-incoming-c
 import RNCallKeep from 'react-native-callkeep';
 import {chatService} from '../../chatService';
 import {ICallNotificationPayload} from '../../../interfaces/customIncomingCallProps';
+import {LocalNotificationServices} from '../localNotificationSerivce';
+import {ChatUtility, navigation, wait} from '../../../utils';
+import {ReceivedNotification} from 'react-native-push-notification';
+import {APP_ROUTES} from '../../../constants';
+import {IConversation} from '../../../interfaces';
 
 export class ChatNotificaitonHandler {
   private static sessionID: string;
   private static callInitiator: string;
 
-  static async handleNotification(
+  static async backgroundMessageHandler(
     remoteMessage: FirebaseMessagingTypes.RemoteMessage,
   ) {
     try {
@@ -56,7 +61,82 @@ export class ChatNotificaitonHandler {
     }
   }
 
-  static attachListeners = () => {
+  static onMessageHandler = async (
+    remoteMessage: FirebaseMessagingTypes.RemoteMessage,
+  ) => {
+    try {
+      if (!remoteMessage.data) return;
+      const msg = await CometChat.CometChatHelper.processMessage(
+        JSON.parse(remoteMessage.data.message),
+      );
+      if (!msg) return;
+      const message = ChatUtility.transformSingleMessage(
+        msg,
+        msg.getReceiverId(),
+      );
+      if (message.isCallMessage) return;
+      const otherUser = msg.getSender();
+      LocalNotificationServices.setLocalNotification({
+        title: message.initiatorName,
+        message: message.text,
+        payload: {
+          navigationProps: {
+            // id will be set in Chat screen
+            id: '',
+            otherUserID: otherUser.getUid(),
+            otherUserName: otherUser.getName(),
+            otherUserAvatar: otherUser.getAvatar(),
+          },
+          navigate: true,
+        },
+      });
+    } catch (e) {
+      console.log('error', e);
+      return;
+    }
+  };
+
+  static remoteNotificationTapHandler = async (
+    remoteMessage: FirebaseMessagingTypes.RemoteMessage,
+    isFromQuitState = false,
+  ) => {
+    try {
+      if (!remoteMessage.data) return;
+      const message = await CometChat.CometChatHelper.processMessage(
+        JSON.parse(remoteMessage.data.message),
+      );
+      if (!message) return;
+
+      const otherUser = message.getSender();
+      const conversation: Omit<IConversation, 'lastMessage'> = {
+        // id will be set in Chat screen
+        id: '',
+        otherUserID: otherUser.getUid(),
+        otherUserName: otherUser.getName(),
+        otherUserAvatar: otherUser.getAvatar(),
+      };
+
+      // wait for navigation container to me initialized after restoring auth state
+      if (isFromQuitState) await wait(1000);
+      navigation.navigate(APP_ROUTES.chatScreen, conversation);
+    } catch (e) {
+      console.log('error', e);
+      return;
+    }
+  };
+
+  static localNotificationTapHandler = (
+    notification: Omit<ReceivedNotification, 'userInfo'>,
+  ) => {
+    const navigationProps = notification.data.navigationProps;
+    const navigate: boolean = notification.data.navigate;
+
+    if (!navigate) return;
+
+    navigation.navigate(APP_ROUTES.chatScreen, navigationProps);
+  };
+
+  static attachCallListeners = () => {
     this.listenForAnsweredCall();
     this.listenForRejectedCall();
   };

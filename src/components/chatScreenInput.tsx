@@ -28,6 +28,7 @@ export const ChatScreenInput = ({
   };
 
   const sendTextMessage = () => {
+    if (text === '') return;
     // add other field as well
     const newMessage: IMessage = {
       id: AuthService.createID(10),

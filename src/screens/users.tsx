@@ -22,7 +22,7 @@ export const Users = () => {
 
   const onUserPress = (user: CometChat.User) => {
     const conversation: Omit<IConversation, 'lastMessage'> = {
-      // id will be set in Chat screen when message is sent
+      // id will be set in Chat screen
       id: '',
       otherUserID: user.getUid(),
       otherUserName: user.getName(),

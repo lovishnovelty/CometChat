@@ -35,7 +35,7 @@ CometChat.init(Config.APP_ID, appSetting).then(
 );
 
 // listeners for when the user accepts or reject calls when the app is in background or quit state through notification
-ChatNotificaitonHandler.attachListeners();
+ChatNotificaitonHandler.attachCallListeners();
 
 messaging().setBackgroundMessageHandler(
   NotificationService.backgroundMessageHandler,

@@ -35,6 +35,7 @@ export const ChatScreen = ({route}: any) => {
           conversation.otherUserID === senderID ||
           conversation.otherUserID === receiverID
         ) {
+          conversation.id = textMessage.getConversationId();
           setMessageList(prev => [
             ...prev,
             ChatUtility.transformSingleMessage(textMessage, userID),

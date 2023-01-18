@@ -7,14 +7,14 @@ export class NotificationService {
   // when message is received while using the app.
   static foregroundHandler = () => {
     messaging().onMessage(async remoteMessage => {
-      console.log('foregroundHandler', remoteMessage);
+      ChatNotificaitonHandler.onMessageHandler(remoteMessage);
     });
   };
 
   // when the app was opened from background state by pressing the notification
   static backgroundHandler = () => {
     messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log('backgroundHandler', remoteMessage);
+      ChatNotificaitonHandler.remoteNotificationTapHandler(remoteMessage);
     });
   };
 
@@ -23,7 +23,11 @@ export class NotificationService {
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-        console.log('quitStateHandler', remoteMessage);
+        if (!remoteMessage) return;
+        ChatNotificaitonHandler.remoteNotificationTapHandler(
+          remoteMessage,
+          true,
+        );
       });
   };
 
@@ -31,7 +35,7 @@ export class NotificationService {
   static backgroundMessageHandler = async (
     remoteMessage: FirebaseMessagingTypes.RemoteMessage,
   ) => {
-    ChatNotificaitonHandler.handleNotification(remoteMessage);
+    ChatNotificaitonHandler.backgroundMessageHandler(remoteMessage);
   };
 
   static onTokenRefresh = (listener: (token: string) => any) => {
