@@ -203,7 +203,11 @@ class ChatService {
 
   acceptIncomingCallFromBackground = async (sessionId: string) => {
     const acceptedCall = await CometChat.acceptCall(sessionId);
-    navigation.reset({index: 0, routeName: APP_ROUTES.callScreen});
+    navigation.reset({
+      index: 0,
+      routeName: APP_ROUTES.callScreen,
+      params: {sessionID: acceptedCall.getSessionId()},
+    });
   };
 
   rejectIncomingCall = (
