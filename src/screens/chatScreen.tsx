@@ -64,7 +64,9 @@ export const ChatScreen = ({route}: any) => {
   }, []);
 
   useEffect(() => {
-    dispatch(setCurrentChatUserID(conversation.otherUserID));
+    if (isFocused) {
+      dispatch(setCurrentChatUserID(conversation.otherUserID));
+    }
   }, [isFocused]);
 
   return (
