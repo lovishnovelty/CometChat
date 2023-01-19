@@ -11,9 +11,11 @@ import {navigation} from '../utils';
 import {useAppSelector} from '../redux';
 import {CustomDivider} from './customDivider';
 import {useIsFocused} from '@react-navigation/native';
+import {CustomActivityIndicator} from './customActivityIndicator';
 
 export const RecentChatList = () => {
   const isFocused = useIsFocused();
+  const [gettingChatList, setGettingChatList] = useState(true);
   const [chatList, setChatList] = useState<IConversation[]>([]);
   const authState = useAppSelector(state => state.auth);
   const onTextMessageReceived = (message: CometChat.TextMessage) => {
@@ -21,7 +23,11 @@ export const RecentChatList = () => {
   };
 
   const getChatList = async () => {
-    const chatList = await chatService.getChatList(authState.userID);
+    const chatList = await chatService
+      .getChatList(authState.userID)
+      .finally(() => {
+        setGettingChatList(false);
+      });
     setChatList(chatList);
   };
 
@@ -47,10 +53,16 @@ export const RecentChatList = () => {
       </Text>
       <CustomDivider />
       <Text style={globalStyles.heading}>Recent Chats</Text>
-      {chatList.length ? (
+      {gettingChatList ? (
+        <CustomActivityIndicator
+          size={'large'}
+          style={globalStyles.placeholder}
+        />
+      ) : chatList.length ? (
         <FlatList
           data={chatList}
           contentContainerStyle={recentChatListStyles.list}
+          showsVerticalScrollIndicator={false}
           renderItem={({item}) => {
             return (
               <ChatListItem
@@ -63,8 +75,7 @@ export const RecentChatList = () => {
           }}
         />
       ) : (
-        <Text
-          style={[globalStyles.title, {marginTop: 100, alignSelf: 'center'}]}>
+        <Text style={[globalStyles.title, globalStyles.placeholder]}>
           No chat found.
         </Text>
       )}

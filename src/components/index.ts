@@ -7,3 +7,4 @@ export * from './chatScreenMessages';
 export * from './chatScreenAppBar';
 export * from './chatScreenInput';
 export * from './textMessage';
+export * from './customActivityIndicator';
