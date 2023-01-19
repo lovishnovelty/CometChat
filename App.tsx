@@ -4,29 +4,32 @@ import {RootNavigation} from './src/navigation/rootNavigation';
 import {Provider} from 'react-redux';
 import {store} from './src/redux';
 import {NotificationService} from './src/services/notification/notificationService';
-import messaging from '@react-native-firebase/messaging';
 import {CometChat} from '@cometchat-pro/react-native-chat';
-import {IncomingCallScreen} from './src/screens';
-
-const getPermissions = async () => {
-  if (Platform.OS === 'android') {
-    await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      'android.permission.POST_NOTIFICATIONS',
-    ]);
-  }
-};
 
 const App = () => {
-  useEffect(() => {
-    getPermissions();
+  const getPermissions = async () => {
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request('android.permission.POST_NOTIFICATIONS');
+
+      await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      ]);
+    }
+  };
+
+  const setup = async () => {
+    await getPermissions();
     NotificationService.setupFCM();
     NotificationService.onTokenRefresh(fcmToken => {
       CometChat.registerTokenForPushNotification(fcmToken);
     });
+  };
+
+  useEffect(() => {
+    setup();
   }, []);
 
   return (

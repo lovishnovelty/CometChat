@@ -25,8 +25,6 @@ LocalNotificationServices.configure();
 
 CometChat.init(Config.APP_ID, appSetting).then(
   async () => {
-    const fcmToken = await messaging().getToken();
-    CometChat.registerTokenForPushNotification(fcmToken);
     console.log('Initialization completed successfully');
   },
   error => {

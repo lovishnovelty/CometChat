@@ -219,8 +219,6 @@ export class ChatNotificaitonHandler {
 
   static removeCallNotification = (callType: CallStatus, userName?: string) => {
     LocalNotificationServices.getDeliveredNotifications(notifications => {
-      console.log(notifications);
-
       const notificationsToRemove = notifications.filter(notification => {
         const isIncomingCall =
           notification.body === 'Incoming audio call' ||
@@ -230,7 +228,6 @@ export class ChatNotificaitonHandler {
           : true;
         return isIncomingCall && isSelectedUsersCall;
       });
-      console.log(notificationsToRemove, 'call notifications');
 
       const identifiers = notificationsToRemove.map(
         notification => notification.identifier,
