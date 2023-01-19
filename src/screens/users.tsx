@@ -3,7 +3,11 @@ import {CometChat} from '@cometchat-pro/react-native-chat';
 import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import {globalStyles} from '../styles';
 import {chatService} from '../services';
-import {CustomAvatar, CustomDivider} from '../components';
+import {
+  CustomActivityIndicator,
+  CustomAvatar,
+  CustomDivider,
+} from '../components';
 import {IConversation} from '../interfaces';
 import {APP_ROUTES} from '../constants';
 import {navigation} from '../utils';
@@ -11,13 +15,19 @@ import {userStyles} from '../styles';
 import {useIsFocused} from '@react-navigation/native';
 
 export const Users = () => {
+  const [gettingUsers, setGettingUsers] = useState(true);
   const [users, setUsers] = useState<CometChat.User[]>([]);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    chatService.getUsers().then(users => {
-      setUsers(users);
-    });
+    chatService
+      .getUsers()
+      .then(users => {
+        setUsers(users);
+      })
+      .finally(() => {
+        setGettingUsers(false);
+      });
   }, [isFocused]);
 
   const onUserPress = (user: CometChat.User) => {
@@ -36,21 +46,32 @@ export const Users = () => {
     <View style={globalStyles.container}>
       <Text style={globalStyles.heading}>Users</Text>
       <CustomDivider size="xs" />
-      <FlatList
-        data={users}
-        contentContainerStyle={{flexGrow: 1}}
-        renderItem={({item}) => {
-          return (
-            <TouchableOpacity
-              style={userStyles.itemContainer}
-              onPress={() => onUserPress(item)}>
-              <CustomAvatar url={item.getAvatar()} />
-              <CustomDivider axis="horizontal" size="xs" />
-              <Text style={[globalStyles.title]}>{item.getName()}</Text>
-            </TouchableOpacity>
-          );
-        }}
-      />
+      {gettingUsers ? (
+        <CustomActivityIndicator
+          style={globalStyles.placeholder}
+          size={'large'}
+        />
+      ) : users.length ? (
+        <FlatList
+          data={users}
+          contentContainerStyle={{flexGrow: 1}}
+          renderItem={({item}) => {
+            return (
+              <TouchableOpacity
+                style={userStyles.itemContainer}
+                onPress={() => onUserPress(item)}>
+                <CustomAvatar url={item.getAvatar()} />
+                <CustomDivider axis="horizontal" size="xs" />
+                <Text style={[globalStyles.title]}>{item.getName()}</Text>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      ) : (
+        <Text style={[globalStyles.title, globalStyles.placeholder]}>
+          No users found.
+        </Text>
+      )}
     </View>
   );
 };

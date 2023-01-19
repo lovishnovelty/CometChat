@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {Text, TextInput, Button, ActivityIndicator} from 'react-native';
-import {CustomDivider} from '../components';
+import {Text, TextInput, Button} from 'react-native';
+import {CustomActivityIndicator, CustomDivider} from '../components';
 import {useAppDispatch, signIn} from '../redux';
 import {AuthService} from '../services';
 import {globalStyles} from '../styles';
@@ -37,7 +37,7 @@ export const Login = () => {
         style={globalStyles.textInput}
       />
       {isLogginIn ? (
-        <ActivityIndicator style={{alignSelf: 'center'}} />
+        <CustomActivityIndicator size={24} style={{alignSelf: 'center'}} />
       ) : (
         <Button color={'coral'} title="Login" onPress={login} />
       )}

@@ -20,4 +20,8 @@ export const globalStyles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 20,
   },
+  placeholder: {
+    marginTop: 100,
+    alignSelf: 'center',
+  },
 });
