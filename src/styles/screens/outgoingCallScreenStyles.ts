@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const callingScreenStyles = StyleSheet.create({
+export const outgoingCallScreenStyles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',

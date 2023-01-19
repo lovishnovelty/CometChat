@@ -6,6 +6,7 @@ import {store} from './src/redux';
 import {NotificationService} from './src/services/notification/notificationService';
 import messaging from '@react-native-firebase/messaging';
 import {CometChat} from '@cometchat-pro/react-native-chat';
+import {IncomingCallScreen} from './src/screens';
 
 const getPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -31,6 +32,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <RootNavigation />
+      {/* <IncomingCallScreen /> */}
     </Provider>
   );
 };

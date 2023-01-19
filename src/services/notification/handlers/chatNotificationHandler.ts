@@ -80,13 +80,6 @@ export class ChatNotificaitonHandler {
       if (message.isCallMessage) return;
       const otherUser = msg.getSender();
 
-      // first remove the notifications from firebase from notification tray
-      this.removeFirebaseNotificationsByUserName(
-        remoteMessage.notification?.title ?? '',
-        remoteMessage.notification?.body ?? '',
-        otherUser.getUid(),
-      );
-
       LocalNotificationServices.setLocalNotification({
         tag: otherUser.getUid(),
         title: message.initiatorName,
@@ -105,6 +98,15 @@ export class ChatNotificaitonHandler {
           navigate: true,
         },
       });
+
+      // remove the local notification from notification tray
+      setTimeout(() => {
+        this.removeLocalNotificationByDescription(
+          remoteMessage.notification?.title ?? '',
+          remoteMessage.notification?.body ?? '',
+          otherUser.getUid(),
+        );
+      }, 500);
     } catch (e) {
       console.log('error', e);
       return;
@@ -172,18 +174,28 @@ export class ChatNotificaitonHandler {
 
   static removeNotificationsByUserName = (userName: string) => {
     LocalNotificationServices.getDeliveredNotifications(notifications => {
+      console.log('all ====>', notifications);
+
       const userNotifications = notifications.filter(notification => {
-        return notification.title === userName;
+        return (
+          notification.title === userName ||
+          notification.body === null ||
+          notification.title === null
+        );
       });
+      console.log('to remove ====> ', userNotifications);
 
       const identifiers = userNotifications.map(
         notification => notification.identifier,
       );
+
+      console.log('ids to remove ====>', identifiers);
+
       LocalNotificationServices.removeDeliveredNotifications(identifiers);
     });
   };
 
-  static removeFirebaseNotificationsByUserName = (
+  static removeLocalNotificationByDescription = (
     title: string,
     body: string,
     userId: string,
@@ -192,7 +204,7 @@ export class ChatNotificaitonHandler {
       const notificationsToRemove = notifications.filter(notification => {
         return (
           notification.title === title &&
-          notification.tag !== userId &&
+          notification.tag === userId &&
           notification.body === body
         );
       });

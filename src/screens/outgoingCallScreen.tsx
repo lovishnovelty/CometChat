@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {CustomAvatar, CustomDivider} from '../components';
 import {SizeConfig} from '../config';
-import {callingScreenStyles, globalStyles} from '../styles';
+import {outgoingCallScreenStyles, globalStyles} from '../styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {navigation} from '../utils';
 import {chatService} from '../services';
@@ -17,7 +17,7 @@ export const OutgoingCallScreen = ({route}: any) => {
   };
 
   return (
-    <View style={[globalStyles.container, callingScreenStyles.container]}>
+    <View style={[globalStyles.container, outgoingCallScreenStyles.container]}>
       <CustomAvatar url={otherUserAvatar} size={SizeConfig.screenWidth * 0.5} />
       <CustomDivider />
       <Text style={globalStyles.heading}>{otherUserName}</Text>
@@ -25,7 +25,7 @@ export const OutgoingCallScreen = ({route}: any) => {
       <Text>Calling...</Text>
       <CustomDivider size="large" />
 
-      <View style={callingScreenStyles.iconContainer}>
+      <View style={outgoingCallScreenStyles.iconContainer}>
         <Icon
           name="phone-hangup"
           size={30}

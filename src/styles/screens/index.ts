@@ -1,3 +1,4 @@
 export * from './homeStyles';
-export * from './callingScreenStyles';
+export * from './outgoingCallScreenStyles';
 export * from './usersStyles';
+export * from './incomingCallScreenStyles';
