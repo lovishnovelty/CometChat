@@ -91,6 +91,7 @@ export class ChatNotificaitonHandler {
 
       const currentRoute = navigation.getCurrentRouteName();
       const currentChatUserID = store.getState().call.currentChatUserID;
+      console.log(currentChatUserID, msg.getSender().getUid());
 
       // remove the notification from firebase from notification tray
       this.removeFirebaseNotificationByDescription(
