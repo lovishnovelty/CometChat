@@ -55,6 +55,7 @@ export const Users = () => {
         <FlatList
           data={users}
           contentContainerStyle={{flexGrow: 1}}
+          showsVerticalScrollIndicator={false}
           renderItem={({item}) => {
             return (
               <TouchableOpacity

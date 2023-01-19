@@ -62,6 +62,7 @@ export const RecentChatList = () => {
         <FlatList
           data={chatList}
           contentContainerStyle={recentChatListStyles.list}
+          showsVerticalScrollIndicator={false}
           renderItem={({item}) => {
             return (
               <ChatListItem

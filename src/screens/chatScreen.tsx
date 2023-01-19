@@ -1,8 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {KeyboardAvoidingView} from 'react-native';
-import {ChatScreenAppBar, ChatScreenMessages} from '../components';
+import {
+  ChatScreenAppBar,
+  ChatScreenMessages,
+  CustomActivityIndicator,
+} from '../components';
 import {ChatScreenInput} from '../components';
-import {CallActionType} from '../enums';
 import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import {useAppSelector} from '../redux';
@@ -10,6 +13,7 @@ import {ChatNotificaitonHandler, chatService} from '../services';
 import {ChatUtility} from '../utils';
 
 export const ChatScreen = ({route}: any) => {
+  const [gettingMessages, setGettingMessages] = useState(true);
   const [messageList, setMessageList] = useState<IMessage[]>([]);
   const conversation: IConversation = route.params;
   const authState = useAppSelector(state => state.auth);
@@ -20,6 +24,7 @@ export const ChatScreen = ({route}: any) => {
       .getMessagesByUID(authState.userID, conversation.otherUserID)
       .then(data => {
         setMessageList(data);
+        setGettingMessages(false);
       });
   };
 
@@ -59,7 +64,11 @@ export const ChatScreen = ({route}: any) => {
   return (
     <KeyboardAvoidingView style={{backgroundColor: 'white', flex: 1}}>
       <ChatScreenAppBar conversation={conversation} />
-      <ChatScreenMessages messageList={messageList} />
+      {gettingMessages ? (
+        <CustomActivityIndicator size={'large'} style={{flex: 1}} />
+      ) : (
+        <ChatScreenMessages messageList={messageList} />
+      )}
       <ChatScreenInput
         setMessageList={setMessageList}
         receiverID={conversation.otherUserID}
