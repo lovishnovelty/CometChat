@@ -1,5 +1,6 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 import {IAuthSlice} from '../interfaces/redux';
 import {chatService} from './chatService';
 
@@ -8,6 +9,8 @@ export class AuthService {
     try {
       let userID = this.createID(5);
       const user = await chatService.login(userID, name);
+      const fcmToken = await messaging().getToken();
+      CometChat.registerTokenForPushNotification(fcmToken);
       await AsyncStorage.setItem('userID', user.getUid());
       return user;
     } catch (e) {
@@ -25,6 +28,8 @@ export class AuthService {
     if (loggedInUserID) {
       const user = await CometChat.getLoggedinUser();
       if (user) {
+        const fcmToken = await messaging().getToken();
+        CometChat.registerTokenForPushNotification(fcmToken);
         return {
           name: user.getName(),
           userID: user.getUid(),

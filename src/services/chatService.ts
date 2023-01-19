@@ -28,6 +28,7 @@ class ChatService {
       newUser.setName(name);
       await CometChat.createUser(newUser, Config.AUTH_KEY ?? '');
       const user = await CometChat.login(userID, Config.AUTH_KEY);
+
       console.log('User logged in:', user);
       return user;
     } catch (e) {
