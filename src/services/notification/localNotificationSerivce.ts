@@ -41,9 +41,7 @@ export class LocalNotificationServices {
     ChatNotificaitonHandler.localNotificationTapHandler(notification);
   };
 
-  static onActionHandler = (notification: ReceivedNotification) => {
-    console.log('opened local notification', notification);
-  };
+  static onActionHandler = (notification: ReceivedNotification) => {};
 
   static setLocalNotification = ({
     id,
@@ -86,11 +84,16 @@ export class LocalNotificationServices {
     PushNotification.cancelLocalNotification(id);
   };
 
-  static removeDeliveredNotifications = (identifiers: string[]) => {
+  static removeNotificaitons = (identifiers: string[], tags?: string[]) => {
     PushNotification.removeDeliveredNotifications(identifiers);
+    if (tags) {
+      for (let i = 0; i < identifiers.length; i++) {
+        PushNotification.clearLocalNotification(tags[i], +identifiers[i]);
+      }
+    }
   };
 
-  static removeAllDeliveredNotifications = () => {
+  static removeAllNotifications = () => {
     PushNotification.removeAllDeliveredNotifications();
   };
 

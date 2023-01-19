@@ -18,7 +18,10 @@ export const IncomingCallScreen = (props: ICustomIncomingCallProps) => {
   return (
     <View style={[globalStyles.container, styles.container]}>
       <CustomDivider size="large" />
-      <Text style={globalStyles.heading}>{props.channelName}</Text>
+      <Text
+        style={
+          globalStyles.heading
+        }>{`Incoming ${payload.callType} call`}</Text>
       <CustomDivider />
       <CustomAvatar url="" size={SizeConfig.screenWidth * 0.5} />
       <CustomDivider value={SPACING.margin.xxl} />

@@ -1,6 +1,6 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
-import {CallActionType, CallType} from '../../../enums';
+import {CallActionType, CallStatus, CallType} from '../../../enums';
 import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
 import RNCallKeep from 'react-native-callkeep';
 import {chatService} from '../../chatService';
@@ -26,6 +26,11 @@ export class ChatNotificaitonHandler {
       if (!message) return;
 
       const isCallMessage = message instanceof CometChat.Call;
+      // Remove previous incoming call notification from notification tray
+      this.removeCallNotification(
+        CallStatus.INCOMING,
+        message.getSender().getName(),
+      );
       if (!isCallMessage) return;
 
       const callMessage = message as CometChat.Call;
@@ -66,8 +71,6 @@ export class ChatNotificaitonHandler {
     remoteMessage: FirebaseMessagingTypes.RemoteMessage,
   ) => {
     try {
-      console.log(remoteMessage);
-
       if (!remoteMessage.data) return;
       const msg = await CometChat.CometChatHelper.processMessage(
         JSON.parse(remoteMessage.data.message),
@@ -77,8 +80,20 @@ export class ChatNotificaitonHandler {
         msg,
         msg.getReceiverId(),
       );
+      // Remove the incoming call notification from notification tray
+      this.removeCallNotification(
+        CallStatus.INCOMING,
+        msg.getSender().getName(),
+      );
       if (message.isCallMessage) return;
       const otherUser = msg.getSender();
+
+      // remove the notification from firebase from notification tray
+      this.removeFirebaseNotificationByDescription(
+        remoteMessage.notification?.title ?? '',
+        remoteMessage.notification?.body ?? '',
+        otherUser.getUid(),
+      );
 
       LocalNotificationServices.setLocalNotification({
         tag: otherUser.getUid(),
@@ -98,15 +113,6 @@ export class ChatNotificaitonHandler {
           navigate: true,
         },
       });
-
-      // remove the local notification from notification tray
-      setTimeout(() => {
-        this.removeLocalNotificationByDescription(
-          remoteMessage.notification?.title ?? '',
-          remoteMessage.notification?.body ?? '',
-          otherUser.getUid(),
-        );
-      }, 500);
     } catch (e) {
       console.log('error', e);
       return;
@@ -174,8 +180,6 @@ export class ChatNotificaitonHandler {
 
   static removeNotificationsByUserName = (userName: string) => {
     LocalNotificationServices.getDeliveredNotifications(notifications => {
-      console.log('all ====>', notifications);
-
       const userNotifications = notifications.filter(notification => {
         return (
           notification.title === userName ||
@@ -183,19 +187,15 @@ export class ChatNotificaitonHandler {
           notification.title === null
         );
       });
-      console.log('to remove ====> ', userNotifications);
-
       const identifiers = userNotifications.map(
         notification => notification.identifier,
       );
-
-      console.log('ids to remove ====>', identifiers);
-
-      LocalNotificationServices.removeDeliveredNotifications(identifiers);
+      const tags = userNotifications.map(notification => notification.tag);
+      LocalNotificationServices.removeNotificaitons(identifiers, tags);
     });
   };
 
-  static removeLocalNotificationByDescription = (
+  static removeFirebaseNotificationByDescription = (
     title: string,
     body: string,
     userId: string,
@@ -204,16 +204,39 @@ export class ChatNotificaitonHandler {
       const notificationsToRemove = notifications.filter(notification => {
         return (
           notification.title === title &&
-          notification.tag === userId &&
+          // tag is set to id of sender when setting local noitification which is not present in firebase's notification
+          notification.tag !== userId &&
           notification.body === body
         );
       });
-      console.log(notificationsToRemove);
 
       const identifiers = notificationsToRemove.map(
         notification => notification.identifier,
       );
-      LocalNotificationServices.removeDeliveredNotifications(identifiers);
+      LocalNotificationServices.removeNotificaitons(identifiers);
+    });
+  };
+
+  static removeCallNotification = (callType: CallStatus, userName?: string) => {
+    LocalNotificationServices.getDeliveredNotifications(notifications => {
+      console.log(notifications);
+
+      const notificationsToRemove = notifications.filter(notification => {
+        const isIncomingCall =
+          notification.body === 'Incoming audio call' ||
+          notification.body === 'Incoming video call';
+        const isSelectedUsersCall = userName
+          ? userName === notification.title
+          : true;
+        return isIncomingCall && isSelectedUsersCall;
+      });
+      console.log(notificationsToRemove, 'call notifications');
+
+      const identifiers = notificationsToRemove.map(
+        notification => notification.identifier,
+      );
+      const tags = notificationsToRemove.map(notification => notification.tag);
+      LocalNotificationServices.removeNotificaitons(identifiers, tags);
     });
   };
 }

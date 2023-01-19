@@ -2,9 +2,11 @@ import {CometChat} from '@cometchat-pro/react-native-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 import {APP_ROUTES} from '../constants';
+import {CallStatus} from '../enums';
 import {IConversation, IModalHandle, IMessage} from '../interfaces';
 import {AppDispatch, setIncomingCall} from '../redux';
 import {ChatUtility, navigation} from '../utils';
+import {ChatNotificaitonHandler} from './notification';
 
 class ChatService {
   conversationRequestBuilder: CometChat.ConversationsRequestBuilder;
@@ -195,6 +197,11 @@ class ChatService {
 
   acceptIncomingCall = async (sessionId: string) => {
     const acceptedCall = await CometChat.acceptCall(sessionId);
+    // Remove the incoming call notification from notification tray
+    ChatNotificaitonHandler.removeCallNotification(
+      CallStatus.INCOMING,
+      acceptedCall.getCallInitiator().getName(),
+    );
     navigation.navigate(APP_ROUTES.callScreen, {
       sessionID: acceptedCall.getSessionId(),
     });
@@ -209,11 +216,16 @@ class ChatService {
     });
   };
 
-  rejectIncomingCall = (
+  rejectIncomingCall = async (
     sessionId: string,
     callStatus = CometChat.CALL_STATUS.REJECTED,
   ) => {
-    return CometChat.rejectCall(sessionId, callStatus);
+    const rejectedCall = await CometChat.rejectCall(sessionId, callStatus);
+    // Remove the incoming call notification from notification tray
+    ChatNotificaitonHandler.removeCallNotification(
+      CallStatus.INCOMING,
+      rejectedCall.getCallInitiator().getName(),
+    );
   };
 
   removeMessageListener = (listenerID: string) => {
