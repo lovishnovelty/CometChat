@@ -19,7 +19,7 @@ class Navigation {
   };
 
   getCurrentRouteName = () => {
-    this.navigationRef.current?.getCurrentRoute();
+    return this.navigationRef.current?.getCurrentRoute();
   };
 
   replace = (name: string, params?: any) => {

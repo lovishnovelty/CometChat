@@ -88,12 +88,16 @@ export class ChatNotificaitonHandler {
       if (message.isCallMessage) return;
       const otherUser = msg.getSender();
 
+      const currentRoute = navigation.getCurrentRouteName();
+
       // remove the notification from firebase from notification tray
       this.removeFirebaseNotificationByDescription(
         remoteMessage.notification?.title ?? '',
         remoteMessage.notification?.body ?? '',
         otherUser.getUid(),
       );
+
+      if (currentRoute.name === APP_ROUTES.chatScreen) return;
 
       LocalNotificationServices.setLocalNotification({
         tag: otherUser.getUid(),
