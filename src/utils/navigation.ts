@@ -30,6 +30,10 @@ class Navigation {
     this.navigationRef.dispatch(StackActions.pop());
   };
 
+  push = (name: string, params?: any) => {
+    this.navigationRef.dispatch(StackActions.push(name, params));
+  };
+
   reset = ({
     index,
     routeName,

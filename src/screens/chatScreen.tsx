@@ -1,3 +1,4 @@
+import {useIsFocused} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {KeyboardAvoidingView} from 'react-native';
 import {
@@ -8,17 +9,18 @@ import {
 import {ChatScreenInput} from '../components';
 import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
-import {useAppSelector} from '../redux';
+import {setCurrentChatUserID, useAppDispatch, useAppSelector} from '../redux';
 import {ChatNotificaitonHandler, chatService} from '../services';
 import {ChatUtility} from '../utils';
 
 export const ChatScreen = ({route}: any) => {
   const [gettingMessages, setGettingMessages] = useState(true);
+  const dispatch = useAppDispatch();
   const [messageList, setMessageList] = useState<IMessage[]>([]);
   const conversation: IConversation = route.params;
   const authState = useAppSelector(state => state.auth);
   const listenerID = conversation.otherUserID;
-
+  const isFocused = useIsFocused();
   const getMessageList = async () => {
     chatService
       .getMessagesByUID(authState.userID, conversation.otherUserID)
@@ -60,6 +62,10 @@ export const ChatScreen = ({route}: any) => {
       chatService.removeMessageListener(listenerID);
     };
   }, []);
+
+  useEffect(() => {
+    dispatch(setCurrentChatUserID(conversation.otherUserID));
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView style={{backgroundColor: 'white', flex: 1}}>

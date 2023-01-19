@@ -10,6 +10,7 @@ import {ChatUtility, navigation, wait} from '../../../utils';
 import {ReceivedNotification} from 'react-native-push-notification';
 import {APP_ROUTES} from '../../../constants';
 import {IConversation} from '../../../interfaces';
+import {store} from '../../../redux';
 
 export class ChatNotificaitonHandler {
   private static sessionID: string;
@@ -89,6 +90,7 @@ export class ChatNotificaitonHandler {
       const otherUser = msg.getSender();
 
       const currentRoute = navigation.getCurrentRouteName();
+      const currentChatUserID = store.getState().call.currentChatUserID;
 
       // remove the notification from firebase from notification tray
       this.removeFirebaseNotificationByDescription(
@@ -97,7 +99,11 @@ export class ChatNotificaitonHandler {
         otherUser.getUid(),
       );
 
-      if (currentRoute.name === APP_ROUTES.chatScreen) return;
+      if (
+        currentRoute.name === APP_ROUTES.chatScreen &&
+        msg.getSender().getUid() === currentChatUserID
+      )
+        return;
 
       LocalNotificationServices.setLocalNotification({
         tag: otherUser.getUid(),
@@ -159,8 +165,7 @@ export class ChatNotificaitonHandler {
     const navigate: boolean = notification.data.navigate;
 
     if (!navigate) return;
-
-    navigation.navigate(APP_ROUTES.chatScreen, navigationProps);
+    navigation.push(APP_ROUTES.chatScreen, navigationProps);
   };
 
   static attachCallListeners = () => {
