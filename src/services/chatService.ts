@@ -59,6 +59,12 @@ class ChatService {
         onCustomMessageReceived: (customMessage: CometChat.CustomMessage) => {
           console.log('Custom message received successfully', customMessage);
         },
+        onTypingStarted: (typingIndicator: CometChat.TypingIndicator) => {
+          console.log('Typing started :', typingIndicator);
+        },
+        onTypingEnded: (typingIndicator: CometChat.TypingIndicator) => {
+          console.log('Typing ended :', typingIndicator);
+        },
       }),
     );
   };
@@ -236,6 +242,29 @@ class ChatService {
     const userRequest = this.userRequestBuilder.setLimit(30).build();
     return await userRequest.fetchNext();
   };
+
+  startTyping = () => {
+    const typingNotification = {
+      RECEIVER_ID: 'string',
+      RECEIVER_TYPE: 'string',
+      META: 'string',
+      KEYS: {
+        TYPING_NOTIFICATION: 'string',
+        TIMESTAMP: 'string',
+      },
+      ACTIONS: {
+        STARTED: 'string',
+        ENDED: 'string',
+      },
+    };
+    console.log('started typing');
+
+    CometChat.startTyping(typingNotification);
+  };
+
+  a() {
+    CometChat.TYPING_NOTIFICATION;
+  }
 }
 
 export const chatService = new ChatService();

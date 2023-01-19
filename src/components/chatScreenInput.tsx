@@ -77,7 +77,10 @@ export const ChatScreenInput = ({
         onContentSizeChange={({nativeEvent: {contentSize}}) =>
           setHeight(contentSize.height)
         }
-        onChangeText={setText}
+        onChangeText={text => {
+          chatService.startTyping();
+          setText(text);
+        }}
       />
       <Icon name="send" size={28} color={'coral'} onPress={sendTextMessage} />
     </View>
