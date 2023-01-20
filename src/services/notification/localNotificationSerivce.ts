@@ -1,11 +1,12 @@
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification, {
+  Importance,
   PushNotificationDeliveredObject,
   PushNotificationObject,
   ReceivedNotification,
 } from 'react-native-push-notification';
+import {CHANNELS} from '../../constants';
 import {ChatNotificaitonHandler} from './handlers';
-
 export class LocalNotificationServices {
   static configure = () => {
     PushNotification.configure({
@@ -26,13 +27,33 @@ export class LocalNotificationServices {
       requestPermissions: true,
     });
 
-    PushNotification.createChannel(
-      {
-        channelId: 'local',
-        channelName: 'Local Notification',
-      },
-      () => {},
-    );
+    this.createChannels();
+  };
+
+  static createChannels = () => {
+    PushNotification.getChannels(existingChannelIDs => {
+      if (!existingChannelIDs.includes(CHANNELS.local.id)) {
+        PushNotification.createChannel(
+          {
+            channelId: CHANNELS.local.id,
+            channelName: CHANNELS.local.name,
+          },
+          created => {},
+        );
+      }
+      if (!existingChannelIDs.includes(CHANNELS.call.id)) {
+        PushNotification.createChannel(
+          {
+            channelId: CHANNELS.call.id,
+            channelName: CHANNELS.call.name,
+            soundName: 'ringtone.mp3',
+            playSound: true,
+            importance: Importance.HIGH,
+          },
+          created => {},
+        );
+      }
+    });
   };
 
   static onNotificationHandler = (
@@ -64,7 +85,7 @@ export class LocalNotificationServices {
       id,
       title,
       message,
-      channelId: 'local',
+      channelId: CHANNELS.local.id,
       userInfo: payload,
       largeIconUrl,
       tag,
@@ -84,7 +105,7 @@ export class LocalNotificationServices {
     PushNotification.cancelLocalNotification(id);
   };
 
-  static removeNotificaitons = (identifiers: string[], tags?: string[]) => {
+  static removeNotifications = (identifiers: string[], tags?: string[]) => {
     PushNotification.removeDeliveredNotifications(identifiers);
     if (tags) {
       for (let i = 0; i < identifiers.length; i++) {

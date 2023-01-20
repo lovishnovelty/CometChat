@@ -8,7 +8,7 @@ import {ICallNotificationPayload} from '../../../interfaces/customIncomingCallPr
 import {LocalNotificationServices} from '../localNotificationSerivce';
 import {ChatUtility, navigation, wait} from '../../../utils';
 import {ReceivedNotification} from 'react-native-push-notification';
-import {APP_ROUTES} from '../../../constants';
+import {APP_ROUTES, CHANNELS} from '../../../constants';
 import {IConversation} from '../../../interfaces';
 import {store} from '../../../redux';
 
@@ -47,15 +47,15 @@ export class ChatNotificaitonHandler {
         };
 
         RNNotificationCall.displayNotification(this.sessionID, null, 30000, {
-          channelId: 'com.cometchatpoc.noti',
-          channelName: `Incoming ${callType} call`,
+          channelId: CHANNELS.call.id,
+          channelName: CHANNELS.call.name,
           notificationIcon: 'ic_launcher', //mipmap
           notificationTitle: `Incoming ${callType} call`,
           notificationBody: `${this.callInitiator} is calling.`,
           answerText: 'Answer',
           declineText: 'Decline',
           notificationColor: 'colorAccent',
-          notificationSound: 'ringtone',
+          notificationSound: 'ringtone.mp3',
           mainComponent: 'incomingCall',
           payload: JSON.stringify(payload),
         });
@@ -200,7 +200,7 @@ export class ChatNotificaitonHandler {
         notification => notification.identifier,
       );
       const tags = userNotifications.map(notification => notification.tag);
-      LocalNotificationServices.removeNotificaitons(identifiers, tags);
+      LocalNotificationServices.removeNotifications(identifiers, tags);
     });
   };
 
@@ -222,7 +222,7 @@ export class ChatNotificaitonHandler {
       const identifiers = notificationsToRemove.map(
         notification => notification.identifier,
       );
-      LocalNotificationServices.removeNotificaitons(identifiers);
+      LocalNotificationServices.removeNotifications(identifiers);
     });
   };
 
@@ -242,7 +242,7 @@ export class ChatNotificaitonHandler {
         notification => notification.identifier,
       );
       const tags = notificationsToRemove.map(notification => notification.tag);
-      LocalNotificationServices.removeNotificaitons(identifiers, tags);
+      LocalNotificationServices.removeNotifications(identifiers, tags);
     });
   };
 }

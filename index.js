@@ -15,13 +15,12 @@ import {
 } from './src/services/';
 import {IncomingCallScreen} from './src/screens';
 
-console.log('cc', Config);
+LocalNotificationServices.configure();
+
 var appSetting = new CometChat.AppSettingsBuilder()
   .subscribePresenceForAllUsers()
   .setRegion(Config.REGION)
   .build();
-
-LocalNotificationServices.configure();
 
 CometChat.init(Config.APP_ID, appSetting).then(
   async () => {
