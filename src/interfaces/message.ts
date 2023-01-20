@@ -1,18 +1,28 @@
 import {CallActionType, CallType} from '../enums';
-
-// need to create separate config object for call and media
+import {IUser} from './user';
 export interface IMessage {
   id: string;
   conversationID: string;
   text: string;
-  initiatorName: string;
-  receiverName: string;
   isSentByMe: boolean;
   isTextMessage: boolean;
   isCallMessage: boolean;
   isMediaMessage: boolean;
-  callType?: CallType;
-  callActionType?: CallActionType;
+  sender: IUser;
+  receiver: IUser;
   time: string;
   date: string;
+  callDetails?: ICallDetail;
+  mediaDetails?: IMediaDetail;
 }
+
+export interface ICallDetail {
+  sessionID: string;
+  callType: CallType;
+  callActionType: CallActionType;
+  isInitiatedByMe: boolean;
+  initiator: IUser;
+  receiver: IUser;
+}
+
+export interface IMediaDetail {}
