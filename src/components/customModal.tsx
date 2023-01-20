@@ -34,7 +34,7 @@ export const CustomModal = forwardRef<
       visible={visible}
       onRequestClose={dismiss}
       animationType="fade">
-      <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={dismiss}>
         <View style={customModalStyles.container}>
           <TouchableWithoutFeedback>
             <View

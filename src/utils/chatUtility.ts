@@ -96,7 +96,6 @@ export class ChatUtility {
     const sentAt = moment(new Date(message.getSentAt()));
     const time = sentAt.format('h a');
     const date = sentAt.format('D MMM');
-
     return {
       id,
       conversationID,

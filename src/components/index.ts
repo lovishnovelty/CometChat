@@ -8,3 +8,4 @@ export * from './chatScreenAppBar';
 export * from './chatScreenInput';
 export * from './textMessage';
 export * from './customActivityIndicator';
+export * from './callAlertModal';
