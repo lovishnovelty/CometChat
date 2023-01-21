@@ -43,7 +43,9 @@ export const RecentChatList = () => {
   }, []);
 
   useEffect(() => {
-    getChatList();
+    if (isFocused) {
+      getChatList();
+    }
   }, [isFocused]);
 
   return (

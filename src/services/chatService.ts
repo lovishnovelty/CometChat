@@ -22,6 +22,22 @@ class ChatService {
     this.userRequestBuilder = new CometChat.UsersRequestBuilder();
   }
 
+  init = () => {
+    var appSetting = new CometChat.AppSettingsBuilder()
+      .subscribePresenceForAllUsers()
+      .setRegion(Config.REGION)
+      .build();
+
+    CometChat.init(Config.APP_ID, appSetting).then(
+      async () => {
+        console.log('Chat service initialized successfully.');
+      },
+      error => {
+        console.log('Chat service initialization failed with error:', error);
+      },
+    );
+  };
+
   login = async (userID: string, name: string) => {
     try {
       const newUser = new CometChat.User(userID);
