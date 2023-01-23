@@ -1,3 +1,4 @@
+import {CometChat} from '@cometchat-pro/react-native-chat';
 import {useIsFocused} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {KeyboardAvoidingView} from 'react-native';
@@ -11,16 +12,17 @@ import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import {setCurrentChatUserID, useAppDispatch, useAppSelector} from '../redux';
 import {ChatNotificaitonHandler, chatService} from '../services';
-import {ChatUtility} from '../utils';
 
 export const ChatScreen = ({route}: any) => {
   const [gettingMessages, setGettingMessages] = useState(true);
-  const dispatch = useAppDispatch();
   const [messageList, setMessageList] = useState<IMessage[]>([]);
-  const conversation: IConversation = route.params;
-  const authState = useAppSelector(state => state.auth);
-  const listenerID = conversation.otherUserID;
+  const [isTyping, setIsTyping] = useState(false);
+  const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
+  const authState = useAppSelector(state => state.auth);
+  const conversation: IConversation = route.params;
+  const listenerID = conversation.otherUserID;
+
   const getMessageList = async () => {
     chatService
       .getMessagesByUID(authState.userID, conversation.otherUserID)
@@ -38,10 +40,26 @@ export const ChatScreen = ({route}: any) => {
     }
   };
 
+  const onTypingStarted = (typingIndicator: CometChat.TypingIndicator) => {
+    const senderID = typingIndicator.getSender().getUid();
+    if (conversation.otherUserID === senderID) {
+      setIsTyping(true);
+    }
+  };
+
+  const onTypingEnded = (typingIndicator: CometChat.TypingIndicator) => {
+    const senderID = typingIndicator.getSender().getUid();
+    if (conversation.otherUserID === senderID) {
+      setIsTyping(false);
+    }
+  };
+
   const addMessageListener = () => {
     chatService.listenForMessage({
       listenerID,
       onMessageReceived,
+      onTypingStarted,
+      onTypingEnded,
     });
   };
 
@@ -68,7 +86,7 @@ export const ChatScreen = ({route}: any) => {
       {gettingMessages ? (
         <CustomActivityIndicator size={'large'} style={{flex: 1}} />
       ) : (
-        <ChatScreenMessages messageList={messageList} />
+        <ChatScreenMessages messageList={messageList} isTyping={isTyping} />
       )}
       <ChatScreenInput
         setMessageList={setMessageList}

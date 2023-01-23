@@ -30,6 +30,8 @@
     "express": "^4.17.2",
     "extract-zip": "^2.0.1",
     "fs-extra": "^10.0.0",
+    "lottie-ios": "3.4.0",
+    "lottie-react-native": "^5.1.4",
     "moment": "^2.29.4",
     "prop-types": "^15.7.2",
     "react": "18.1.0",
