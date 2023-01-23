@@ -4,4 +4,5 @@ export interface ICallSlice {
     name: string;
     avatar: string;
   };
+  currentChatUserID: string;
 }

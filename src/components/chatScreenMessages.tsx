@@ -24,8 +24,10 @@ export const ChatScreenMessages = ({
       onContentSizeChange={scrollToEnd}
       onLayout={scrollToEnd}
       showsVerticalScrollIndicator={false}
-      data={messageList.filter(
-        message => message.callActionType !== CallActionType.ONGOING,
+      data={messageList.filter(message =>
+        message.callDetails
+          ? message.callDetails.callActionType !== CallActionType.ONGOING
+          : true,
       )}
       contentContainerStyle={styles.list}
       renderItem={({

@@ -34,14 +34,22 @@ export const ChatScreenInput = ({
       id: AuthService.createID(10),
       conversationID: '',
       text: text,
-      initiatorName: '',
       isSentByMe: true,
       isTextMessage: true,
       isCallMessage: false,
       isMediaMessage: false,
       time: '',
       date: '',
-      receiverName: '',
+      sender: {
+        id: '',
+        name: '',
+        avatar: '',
+      },
+      receiver: {
+        id: '',
+        name: '',
+        avatar: '',
+      },
     };
 
     chatService

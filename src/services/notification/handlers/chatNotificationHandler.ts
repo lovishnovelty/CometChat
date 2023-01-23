@@ -8,8 +8,9 @@ import {ICallNotificationPayload} from '../../../interfaces/customIncomingCallPr
 import {LocalNotificationServices} from '../localNotificationSerivce';
 import {ChatUtility, navigation, wait} from '../../../utils';
 import {ReceivedNotification} from 'react-native-push-notification';
-import {APP_ROUTES} from '../../../constants';
+import {APP_ROUTES, CHANNELS} from '../../../constants';
 import {IConversation} from '../../../interfaces';
+import {store} from '../../../redux';
 
 export class ChatNotificaitonHandler {
   private static sessionID: string;
@@ -25,41 +26,42 @@ export class ChatNotificaitonHandler {
       );
       if (!message) return;
 
-      const isCallMessage = message instanceof CometChat.Call;
       // Remove previous incoming call notification from notification tray
       this.removeCallNotification(
         CallStatus.INCOMING,
         message.getSender().getName(),
       );
-      if (!isCallMessage) return;
+      const callMessage = ChatUtility.transformSingleMessage(
+        message,
+        message.getReceiverId(),
+      );
+      if (!callMessage.isCallMessage || !callMessage.callDetails) return;
+      const {callDetails} = callMessage;
 
-      const callMessage = message as CometChat.Call;
-      const callType = callMessage.getType() as CallType;
-      const callActionType = callMessage.getAction() as CallActionType;
-      if (callActionType === CallActionType.INITIATED) {
-        this.sessionID = callMessage.getSessionId();
-        this.callInitiator = callMessage.getCallInitiator().getName();
+      if (callDetails.callActionType === CallActionType.INITIATED) {
+        this.sessionID = callDetails.sessionID;
+        this.callInitiator = callDetails.initiator.name;
 
         const payload: ICallNotificationPayload = {
-          callType,
+          callType: callDetails.callType,
           callInitiator: this.callInitiator,
         };
 
         RNNotificationCall.displayNotification(this.sessionID, null, 30000, {
-          channelId: 'com.cometchatpoc.noti',
-          channelName: `Incoming ${callType} call`,
+          channelId: CHANNELS.call.id,
+          channelName: CHANNELS.call.name,
           notificationIcon: 'ic_launcher', //mipmap
-          notificationTitle: `Incoming ${callType} call`,
+          notificationTitle: `Incoming ${callDetails.callType} call`,
           notificationBody: `${this.callInitiator} is calling.`,
           answerText: 'Answer',
           declineText: 'Decline',
           notificationColor: 'colorAccent',
-          notificationSound: 'ringtone',
+          notificationSound: 'ringtone.mp3',
           mainComponent: 'incomingCall',
           payload: JSON.stringify(payload),
         });
       } else {
-        RNNotificationCall.declineCall('');
+        RNNotificationCall.declineCall(this.sessionID);
       }
     } catch (e) {
       console.log('error', e);
@@ -86,29 +88,38 @@ export class ChatNotificaitonHandler {
         msg.getSender().getName(),
       );
       if (message.isCallMessage) return;
-      const otherUser = msg.getSender();
+      const otherUser = message.sender;
+
+      const currentRoute = navigation.getCurrentRouteName();
+      const currentChatUserID = store.getState().call.currentChatUserID;
 
       // remove the notification from firebase from notification tray
       this.removeFirebaseNotificationByDescription(
         remoteMessage.notification?.title ?? '',
         remoteMessage.notification?.body ?? '',
-        otherUser.getUid(),
+        otherUser.id,
       );
 
+      if (
+        currentRoute.name === APP_ROUTES.chatScreen &&
+        msg.getSender().getUid() === currentChatUserID
+      )
+        return;
+
       LocalNotificationServices.setLocalNotification({
-        tag: otherUser.getUid(),
-        title: message.initiatorName,
+        tag: otherUser.id,
+        title: otherUser.name,
         message: message.text,
         largeIconUrl:
-          otherUser.getAvatar() ??
+          otherUser.avatar ??
           'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
         payload: {
           navigationProps: {
             // id will be set in Chat screen
             id: '',
-            otherUserID: otherUser.getUid(),
-            otherUserName: otherUser.getName(),
-            otherUserAvatar: otherUser.getAvatar(),
+            otherUserID: otherUser.id,
+            otherUserName: otherUser.name,
+            otherUserAvatar: otherUser.avatar,
           },
           navigate: true,
         },
@@ -125,18 +136,21 @@ export class ChatNotificaitonHandler {
   ) => {
     try {
       if (!remoteMessage.data) return;
-      const message = await CometChat.CometChatHelper.processMessage(
+      const msg = await CometChat.CometChatHelper.processMessage(
         JSON.parse(remoteMessage.data.message),
       );
-      if (!message) return;
-
-      const otherUser = message.getSender();
+      if (!msg) return;
+      const message = ChatUtility.transformSingleMessage(
+        msg,
+        msg.getReceiverId(),
+      );
+      const otherUser = message.sender;
       const conversation: Omit<IConversation, 'lastMessage'> = {
         // id will be set in Chat screen
         id: '',
-        otherUserID: otherUser.getUid(),
-        otherUserName: otherUser.getName(),
-        otherUserAvatar: otherUser.getAvatar(),
+        otherUserID: otherUser.id,
+        otherUserName: otherUser.name,
+        otherUserAvatar: otherUser.avatar,
       };
 
       // wait for navigation container to me initialized after restoring auth state
@@ -155,8 +169,7 @@ export class ChatNotificaitonHandler {
     const navigate: boolean = notification.data.navigate;
 
     if (!navigate) return;
-
-    navigation.navigate(APP_ROUTES.chatScreen, navigationProps);
+    navigation.push(APP_ROUTES.chatScreen, navigationProps);
   };
 
   static attachCallListeners = () => {
@@ -191,7 +204,7 @@ export class ChatNotificaitonHandler {
         notification => notification.identifier,
       );
       const tags = userNotifications.map(notification => notification.tag);
-      LocalNotificationServices.removeNotificaitons(identifiers, tags);
+      LocalNotificationServices.removeNotifications(identifiers, tags);
     });
   };
 
@@ -216,7 +229,7 @@ export class ChatNotificaitonHandler {
       const identifiers = notificationsToRemove.map(
         notification => notification.identifier,
       );
-      LocalNotificationServices.removeNotificaitons(identifiers);
+      LocalNotificationServices.removeNotifications(identifiers);
     });
   };
 
@@ -236,7 +249,7 @@ export class ChatNotificaitonHandler {
         notification => notification.identifier,
       );
       const tags = notificationsToRemove.map(notification => notification.tag);
-      LocalNotificationServices.removeNotificaitons(identifiers, tags);
+      LocalNotificationServices.removeNotifications(identifiers, tags);
     });
   };
 }

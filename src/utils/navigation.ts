@@ -19,7 +19,7 @@ class Navigation {
   };
 
   getCurrentRouteName = () => {
-    this.navigationRef.current?.getCurrentRoute();
+    return this.navigationRef.current?.getCurrentRoute();
   };
 
   replace = (name: string, params?: any) => {
@@ -28,6 +28,10 @@ class Navigation {
 
   pop = () => {
     this.navigationRef.dispatch(StackActions.pop());
+  };
+
+  push = (name: string, params?: any) => {
+    this.navigationRef.dispatch(StackActions.push(name, params));
   };
 
   reset = ({
