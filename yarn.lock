@@ -7235,7 +7235,7 @@ react-native-size-matters@^0.3.1:
 
 react-native-sound@^0.11.2:
   version "0.11.2"
-  resolved "https://registry.npmjs.org/react-native-sound/-/react-native-sound-0.11.2.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.11.2.tgz#e542dc5b9e16ab4b3ac7e6eaddb1fc8d98da9038"
   integrity sha512-LmGc8lgOK3qecYMVQpyHvww/C+wgT6sWeMpVbOe4NCRGC2yKd4fo4U0KBUo9PO7AqKESO3I/2GZg1/C0+bwiiA==
 
 react-native-swipe-list-view@^3.2.9:
@@ -7273,7 +7273,7 @@ react-native-voip-push-notification@^3.3.1:
   resolved "https://registry.npmjs.org/react-native-voip-push-notification/-/react-native-voip-push-notification-3.3.1.tgz"
   integrity sha512-AlS0QDUNpKMEAOz4MeLx+wg4Tf4Xg+0LhsjRUCjUOGzfVRGYltyiHECtyZUcTF5OIQC6eem5IU8mLPxN7sB6Qg==
 
-react-native-webrtc@^1.106.1:
+react-native-webrtc@^1.106.0:
   version "1.106.1"
   resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-1.106.1.tgz#31b18e8780bb927934ebddb5e03a8168cc6edf3c"
   integrity sha512-955gqWFdISARz9D4hmnPzKQwpaU+AGqUbU+vBjzLCozUseSJ69tTQg2cShyPCBH6A1rwJQE+mrdjcpkeGbx3pQ==

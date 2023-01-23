@@ -211,6 +211,8 @@ class ChatService {
               },
             }),
           );
+
+          // move this back to ui
           modalRef.current?.open();
         },
         onIncomingCallCancelled: (cancelledCall: CometChat.Call) => {

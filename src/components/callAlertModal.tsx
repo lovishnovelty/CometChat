@@ -1,5 +1,8 @@
-import {useImperativeHandle, forwardRef, useRef} from 'react';
-import {Button, Text, TouchableOpacity, View} from 'react-native';
+import {useImperativeHandle, forwardRef, useRef, useEffect} from 'react';
+import {AppState, Text, TouchableOpacity, View} from 'react-native';
+import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
+import Sound from 'react-native-sound';
+import {SOUNDS} from '../constants';
 import {IModalHandle} from '../interfaces';
 import {useAppSelector} from '../redux';
 import {chatService} from '../services';
@@ -12,13 +15,40 @@ export const CallAlertModal = forwardRef<IModalHandle>((_, ref) => {
   const {incomingCallInitiator, incomingCallID} = useAppSelector(
     state => state.call,
   );
+  const ringtoneRef = useRef(
+    new Sound(SOUNDS.ringtone, Sound.MAIN_BUNDLE, err => {
+      if (err) {
+        console.log('Failed to load ringtone', err);
+      }
+    }),
+  );
 
   const modalRef = useRef<IModalHandle>(null);
 
+  const open = () => {
+    modalRef.current?.open();
+    if (AppState.currentState === 'active') {
+      ringtoneRef.current.play(success => {
+        if (!success) {
+          console.log('Failed to play ringtone.');
+        }
+      });
+    }
+  };
+
+  const close = () => {
+    ringtoneRef.current.stop();
+    modalRef.current?.close();
+  };
+
   useImperativeHandle(ref, () => ({
-    open: () => modalRef.current?.open(),
-    close: () => modalRef.current?.close(),
+    open,
+    close,
   }));
+
+  useEffect(() => {
+    ringtoneRef.current.setNumberOfLoops(-1);
+  }, []);
 
   return (
     <CustomModal ref={modalRef} isDismissible={false}>
@@ -39,8 +69,9 @@ export const CallAlertModal = forwardRef<IModalHandle>((_, ref) => {
             callAlertModalStyles.declineButton,
           ]}
           onPress={() => {
-            modalRef.current?.close();
+            close();
             chatService.rejectIncomingCall(incomingCallID);
+            RNNotificationCall.hideNotification();
           }}>
           <Text style={callAlertModalStyles.buttonLabel}>Decline</Text>
         </TouchableOpacity>
@@ -51,8 +82,9 @@ export const CallAlertModal = forwardRef<IModalHandle>((_, ref) => {
             callAlertModalStyles.answerButton,
           ]}
           onPress={() => {
-            modalRef.current?.close();
+            close();
             chatService.acceptIncomingCall(incomingCallID);
+            RNNotificationCall.hideNotification();
           }}>
           <Text style={callAlertModalStyles.buttonLabel}>Answer</Text>
         </TouchableOpacity>
