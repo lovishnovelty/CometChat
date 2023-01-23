@@ -23,13 +23,13 @@ export const ChatScreenMessages = ({
   };
 
   const buildTypingComponent = () => {
-    return isTyping ? (
+    return !isTyping ? (
       <View style={styles.typingContainer}>
         <LottieView
           source={require('../../assets/lottie/typing.json')}
           autoPlay
           loop
-          style={{height: 50}}
+          style={{height: 25}}
         />
       </View>
     ) : (

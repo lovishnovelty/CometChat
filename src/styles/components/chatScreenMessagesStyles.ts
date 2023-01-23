@@ -7,8 +7,8 @@ export const chatScreenMessagesStyles = StyleSheet.create({
     paddingBottom: 0,
   },
   typingContainer: {
-    paddingLeft: SPACING.padding.lg,
-    paddingRight: SPACING.padding.sm,
+    paddingHorizontal: SPACING.padding.sm,
+    paddingVertical: SPACING.padding.sm,
     borderRadius: 25,
     marginBottom: 15,
     alignSelf: 'flex-start',
