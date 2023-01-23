@@ -8,7 +8,7 @@ import {ICallNotificationPayload} from '../../../interfaces/customIncomingCallPr
 import {LocalNotificationServices} from '../localNotificationSerivce';
 import {ChatUtility, navigation, wait} from '../../../utils';
 import {ReceivedNotification} from 'react-native-push-notification';
-import {APP_ROUTES, CHANNELS} from '../../../constants';
+import {APP_ROUTES, CHANNELS, SOUNDS} from '../../../constants';
 import {IConversation} from '../../../interfaces';
 import {store} from '../../../redux';
 
@@ -56,7 +56,7 @@ export class ChatNotificaitonHandler {
           answerText: 'Answer',
           declineText: 'Decline',
           notificationColor: 'colorAccent',
-          notificationSound: 'ringtone.mp3',
+          notificationSound: SOUNDS.ringtone,
           mainComponent: 'incomingCall',
           payload: JSON.stringify(payload),
         });

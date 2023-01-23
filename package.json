@@ -60,7 +60,7 @@
     "react-native-video": "^5.2.1",
     "react-native-video-controls": "^2.8.1",
     "react-native-voip-push-notification": "^3.3.1",
-    "react-native-webrtc": "^1.106.1",
+    "react-native-webrtc": "^1.106.0",
     "react-native-webview": "^11.26.0",
     "react-redux": "^8.0.5",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",

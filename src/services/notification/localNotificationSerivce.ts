@@ -5,7 +5,7 @@ import PushNotification, {
   PushNotificationObject,
   ReceivedNotification,
 } from 'react-native-push-notification';
-import {CHANNELS} from '../../constants';
+import {CHANNELS, SOUNDS} from '../../constants';
 import {ChatNotificaitonHandler} from './handlers';
 export class LocalNotificationServices {
   static configure = () => {
@@ -46,7 +46,7 @@ export class LocalNotificationServices {
           {
             channelId: CHANNELS.call.id,
             channelName: CHANNELS.call.name,
-            soundName: 'ringtone.mp3',
+            soundName: SOUNDS.ringtone,
             playSound: true,
             importance: Importance.HIGH,
           },
