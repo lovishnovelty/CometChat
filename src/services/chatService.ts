@@ -54,10 +54,14 @@ class ChatService {
   };
 
   listenForMessage = async ({
-    onTextMessageReceived,
+    onMessageReceived,
     listenerID,
+    onTypingStarted,
+    onTypingEnded,
   }: {
-    onTextMessageReceived: (textMessage: CometChat.TextMessage) => void;
+    onMessageReceived: (message: IMessage) => void;
+    onTypingStarted?: (typingIndicator: CometChat.TypingIndicator) => void;
+    onTypingEnded?: (typingIndicator: CometChat.TypingIndicator) => void;
     listenerID: string;
   }) => {
     const userId = await AsyncStorage.getItem('userID');
@@ -69,19 +73,25 @@ class ChatService {
     CometChat.addMessageListener(
       listenerID,
       new CometChat.MessageListener({
-        onTextMessageReceived: onTextMessageReceived,
+        onTextMessageReceived: (textMessage: CometChat.TextMessage) => {
+          console.log('received');
+
+          onMessageReceived(
+            ChatUtility.transformSingleMessage(textMessage, userId),
+          );
+        },
         onMediaMessageReceived: (mediaMessage: CometChat.MediaMessage) => {
-          console.log('Media message received successfully', mediaMessage);
+          onMessageReceived(
+            ChatUtility.transformSingleMessage(mediaMessage, userId),
+          );
         },
         onCustomMessageReceived: (customMessage: CometChat.CustomMessage) => {
-          console.log('Custom message received successfully', customMessage);
+          onMessageReceived(
+            ChatUtility.transformSingleMessage(customMessage, userId),
+          );
         },
-        onTypingStarted: (typingIndicator: CometChat.TypingIndicator) => {
-          console.log('Typing started :', typingIndicator);
-        },
-        onTypingEnded: (typingIndicator: CometChat.TypingIndicator) => {
-          console.log('Typing ended :', typingIndicator);
-        },
+        onTypingStarted,
+        onTypingEnded,
       }),
     );
   };
@@ -260,28 +270,21 @@ class ChatService {
     return await userRequest.fetchNext();
   };
 
-  startTyping = () => {
-    const typingNotification = {
-      RECEIVER_ID: 'string',
-      RECEIVER_TYPE: 'string',
-      META: 'string',
-      KEYS: {
-        TYPING_NOTIFICATION: 'string',
-        TIMESTAMP: 'string',
-      },
-      ACTIONS: {
-        STARTED: 'string',
-        ENDED: 'string',
-      },
-    };
-    console.log('started typing');
-
+  startTyping = (receiverID: string) => {
+    const typingNotification = new CometChat.TypingIndicator(
+      receiverID,
+      CometChat.RECEIVER_TYPE.USER,
+    );
     CometChat.startTyping(typingNotification);
   };
 
-  a() {
-    CometChat.TYPING_NOTIFICATION;
-  }
+  endTyping = (receiverID: string) => {
+    const typingNotification = new CometChat.TypingIndicator(
+      receiverID,
+      CometChat.RECEIVER_TYPE.USER,
+    );
+    CometChat.endTyping(typingNotification);
+  };
 }
 
 export const chatService = new ChatService();

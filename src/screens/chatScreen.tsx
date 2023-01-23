@@ -30,25 +30,18 @@ export const ChatScreen = ({route}: any) => {
       });
   };
 
+  const onMessageReceived = (message: IMessage) => {
+    const senderID = message.sender.id;
+    if (conversation.otherUserID === senderID) {
+      if (!conversation.id) conversation.id = message.conversationID;
+      setMessageList(prev => [...prev, message]);
+    }
+  };
+
   const addMessageListener = () => {
     chatService.listenForMessage({
       listenerID,
-      onTextMessageReceived: textMessage => {
-        const receiverType = textMessage.getReceiverType();
-        if (receiverType === 'group') return;
-        const senderID = textMessage.getSender().getUid();
-        const receiverID = textMessage.getReceiverId();
-        if (
-          conversation.otherUserID === senderID ||
-          conversation.otherUserID === receiverID
-        ) {
-          conversation.id = textMessage.getConversationId();
-          setMessageList(prev => [
-            ...prev,
-            ChatUtility.transformSingleMessage(textMessage, authState.userID),
-          ]);
-        }
-      },
+      onMessageReceived,
     });
   };
 
