@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import LottieView from 'lottie-react-native';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
+import normalize from 'react-native-normalize';
 import {chatScreenMessagesStyles as styles} from '../styles';
 import {TextMessage} from './textMessage';
 import {CallMessage} from './callMessage';
@@ -23,13 +24,13 @@ export const ChatScreenMessages = ({
   };
 
   const buildTypingComponent = () => {
-    return !isTyping ? (
+    return isTyping ? (
       <View style={styles.typingContainer}>
         <LottieView
           source={require('../../assets/lottie/typing.json')}
           autoPlay
           loop
-          style={{height: 25}}
+          style={{height: normalize(25)}}
         />
       </View>
     ) : (
