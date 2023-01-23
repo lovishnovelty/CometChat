@@ -1,7 +1,6 @@
-import {CometChat} from '@cometchat-pro/react-native-chat';
 import React, {useEffect, useState} from 'react';
 import {FlatList, Text, View} from 'react-native';
-import {IConversation} from '../interfaces';
+import {IConversation, IMessage} from '../interfaces';
 import {chatService} from '../services/chatService';
 import {globalStyles} from '../styles/globalStyles';
 import {ChatListItem} from './recentChatListItem';
@@ -18,7 +17,7 @@ export const RecentChatList = () => {
   const [gettingChatList, setGettingChatList] = useState(true);
   const [chatList, setChatList] = useState<IConversation[]>([]);
   const authState = useAppSelector(state => state.auth);
-  const onTextMessageReceived = (message: CometChat.TextMessage) => {
+  const onMessageReceived = (message: IMessage) => {
     getChatList();
   };
 
@@ -37,7 +36,7 @@ export const RecentChatList = () => {
 
   useEffect(() => {
     chatService.listenForMessage({
-      onTextMessageReceived,
+      onMessageReceived,
       listenerID: 'recent_chat_list',
     });
   }, []);

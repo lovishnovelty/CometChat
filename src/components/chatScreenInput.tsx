@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {View, TextInput} from 'react-native';
 import {chatScreenInputStyles as styles} from '../styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,6 +15,7 @@ export const ChatScreenInput = ({
 }) => {
   const [height, setHeight] = useState(40);
   const [text, setText] = useState('');
+  const intervalID = useRef<number | null>(null);
   const userID = useAppSelector(state => state.auth.userID);
 
   const removeLocallyCreatedMessage = () => {
@@ -69,6 +70,21 @@ export const ChatScreenInput = ({
     setText('');
   };
 
+  const startTyping = () => {
+    if (intervalID.current) return;
+    const interval = 5000;
+    chatService.startTyping(receiverID);
+    intervalID.current = setInterval(() => {
+      endTyping();
+    }, interval);
+  };
+
+  const endTyping = () => {
+    chatService.endTyping(receiverID);
+    if (intervalID.current) clearInterval(intervalID.current);
+    intervalID.current = null;
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -85,7 +101,10 @@ export const ChatScreenInput = ({
         onContentSizeChange={({nativeEvent: {contentSize}}) =>
           setHeight(contentSize.height)
         }
-        onChangeText={setText}
+        onChangeText={text => {
+          startTyping();
+          setText(text);
+        }}
       />
       <Icon name="send" size={28} color={'coral'} onPress={sendTextMessage} />
     </View>

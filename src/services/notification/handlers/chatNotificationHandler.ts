@@ -214,6 +214,8 @@ export class ChatNotificaitonHandler {
     userId: string,
   ) => {
     LocalNotificationServices.getDeliveredNotifications(notifications => {
+      console.log('notifications', notifications);
+
       const notificationsToRemove = notifications.filter(notification => {
         return (
           notification.title === title &&
@@ -222,6 +224,7 @@ export class ChatNotificaitonHandler {
           notification.body === body
         );
       });
+      console.log('to remove', notificationsToRemove);
 
       const identifiers = notificationsToRemove.map(
         notification => notification.identifier,

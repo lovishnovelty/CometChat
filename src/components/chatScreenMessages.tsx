@@ -1,21 +1,41 @@
 import React, {useRef} from 'react';
+import LottieView from 'lottie-react-native';
+import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
+import normalize from 'react-native-normalize';
 import {chatScreenMessagesStyles as styles} from '../styles';
 import {TextMessage} from './textMessage';
 import {CallMessage} from './callMessage';
 import {MediaMessage} from './mediaMessage';
-import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {IMessage} from '../interfaces/';
 import {CallActionType} from '../enums';
+import {View} from 'react-native';
 
 export const ChatScreenMessages = ({
   messageList,
+  isTyping = false,
 }: {
   messageList: IMessage[];
+  isTyping?: boolean;
 }) => {
   const listRef = useRef<KeyboardAwareFlatList>(null);
 
   const scrollToEnd = () => {
     listRef.current?.scrollToEnd();
+  };
+
+  const buildTypingComponent = () => {
+    return isTyping ? (
+      <View style={styles.typingContainer}>
+        <LottieView
+          source={require('../../assets/lottie/typing.json')}
+          autoPlay
+          loop
+          style={{height: normalize(25)}}
+        />
+      </View>
+    ) : (
+      <></>
+    );
   };
 
   return (
@@ -43,6 +63,7 @@ export const ChatScreenMessages = ({
           <MediaMessage isSentByMe={isSentByMe} message={text} />
         );
       }}
+      ListFooterComponent={buildTypingComponent}
     />
   );
 };
