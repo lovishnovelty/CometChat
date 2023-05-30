@@ -11,8 +11,8 @@
     "postinstall": "cd ios && pod install --repo-update && cd .."
   },
   "dependencies": {
-    "@cometchat-pro/react-native-calls": "^2.3.0-beta1",
-    "@cometchat-pro/react-native-chat": "^3.0.10",
+    "@cometchat-pro/react-native-calls": "^2.3.1",
+    "@cometchat-pro/react-native-chat": "^3.0.12",
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/push-notification-ios": "^1.10.1",
@@ -38,7 +38,7 @@
     "react-native": "0.70.6",
     "react-native-autolink": "^4.0.0",
     "react-native-background-timer": "^2.4.1",
-    "react-native-callkeep": "^4.3.3",
+    "react-native-callkeep": "^4.3.8",
     "react-native-callstats": "^3.73.22",
     "react-native-config": "^1.4.11",
     "react-native-document-picker": "^8.1.3",

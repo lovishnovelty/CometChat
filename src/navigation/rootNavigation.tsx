@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useEffect, useState} from 'react';
-import {Text} from 'react-native';
+import {SafeAreaView, Text} from 'react-native';
 import {APP_ROUTES} from '../constants';
 import {restoreAuthState, useAppDispatch, useAppSelector} from '../redux';
 import {ChatScreen, CallScreen, OutgoingCallScreen, Login} from '../screens';
@@ -29,18 +29,26 @@ export const RootNavigation = () => {
 
   return (
     <NavigationContainer ref={navigation.navigationRef}>
-      <RootStack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <RootStack.Screen name={APP_ROUTES.tab} component={TabNavigator} />
-        <RootStack.Screen name={APP_ROUTES.callScreen} component={CallScreen} />
-        <RootStack.Screen name={APP_ROUTES.chatScreen} component={ChatScreen} />
-        <RootStack.Screen
-          name={APP_ROUTES.callingScreen}
-          component={OutgoingCallScreen}
-        />
-      </RootStack.Navigator>
+      <SafeAreaView style={{flex: 1}}>
+        <RootStack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <RootStack.Screen name={APP_ROUTES.tab} component={TabNavigator} />
+          <RootStack.Screen
+            name={APP_ROUTES.callScreen}
+            component={CallScreen}
+          />
+          <RootStack.Screen
+            name={APP_ROUTES.chatScreen}
+            component={ChatScreen}
+          />
+          <RootStack.Screen
+            name={APP_ROUTES.callingScreen}
+            component={OutgoingCallScreen}
+          />
+        </RootStack.Navigator>
+      </SafeAreaView>
     </NavigationContainer>
   );
 };

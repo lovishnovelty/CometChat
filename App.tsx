@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {PermissionsAndroid, Platform} from 'react-native';
+import {PermissionsAndroid, Platform, SafeAreaView} from 'react-native';
 import {RootNavigation} from './src/navigation/rootNavigation';
 import {Provider} from 'react-redux';
 import {store} from './src/redux';
