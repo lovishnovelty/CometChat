@@ -36,8 +36,10 @@ export const ChatScreen = ({route}: any) => {
   };
 
   const onMessageReceived = (message: IMessage) => {
-    // check if group, and if yes use group id instead
-    const senderID = message.sender.id;
+    const senderID =
+      conversation.convoType === ConvoType.GROUP
+        ? message.receiver.id
+        : message.sender.id;
     if (convoWithId === senderID) {
       if (!conversation.id) conversation.id = message.conversationID;
       setMessageList(prev => [...prev, message]);
