@@ -8,6 +8,9 @@ const initialState: ICallSlice = {
     avatar: '',
   },
   currentChatUserID: '',
+  activeSessionDetail: {
+    sessionID: '',
+  },
 };
 
 const callSlice = createSlice({
@@ -16,7 +19,11 @@ const callSlice = createSlice({
   reducers: {
     setIncomingCall: (
       state,
-      {payload}: PayloadAction<Omit<ICallSlice, 'currentChatUserID'>>,
+      {
+        payload,
+      }: PayloadAction<
+        Omit<ICallSlice, 'currentChatUserID' | 'activeSessionDetail'>
+      >,
     ) => {
       state.incomingCallID = payload.incomingCallID;
       state.incomingCallInitiator.name = payload.incomingCallInitiator.name;
@@ -32,8 +39,12 @@ const callSlice = createSlice({
     setCurrentChatUserID: (state, {payload}: PayloadAction<string>) => {
       state.currentChatUserID = payload;
     },
+    joinSession: (state, {payload}: PayloadAction<string>) => {
+      state.activeSessionDetail.sessionID = payload;
+    },
   },
 });
 
 export const callReducer = callSlice.reducer;
-export const {setIncomingCall, setCurrentChatUserID} = callSlice.actions;
+export const {setIncomingCall, setCurrentChatUserID, joinSession} =
+  callSlice.actions;

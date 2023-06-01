@@ -15,19 +15,32 @@ export class ChatUtility {
     chatList: CometChat.Conversation[],
     userID: string,
   ): IConversation[] => {
-    return chatList.map(convo => {
-      const otherUser = convo.getConversationWith() as CometChat.User;
-      return {
-        id: convo.getConversationId(),
-        lastMessage: this.transformSingleMessage(
-          convo.getLastMessage(),
-          userID,
-        ),
-        otherUserName: otherUser.getName(),
-        otherUserAvatar: otherUser.getAvatar(),
-        otherUserID: otherUser.getUid(),
-      };
-    });
+    try {
+      const transformedChatList = chatList.map(convo => {
+        const convoWith = convo.getConversationWith();
+        // Ignore group chat
+        if (convoWith instanceof CometChat.Group) {
+          return;
+        }
+        const otherUser = convoWith;
+        return {
+          id: convo.getConversationId(),
+          lastMessage: this.transformSingleMessage(
+            convo.getLastMessage(),
+            userID,
+          ),
+          otherUserName: otherUser.getName(),
+          otherUserAvatar: otherUser.getAvatar(),
+          otherUserID: otherUser.getUid(),
+        };
+      });
+      return transformedChatList.filter(
+        x => x !== undefined,
+      ) as IConversation[];
+    } catch (err: any) {
+      console.log({errrrrrr: err.toString()});
+      return [];
+    }
   };
 
   static transformMessages = (

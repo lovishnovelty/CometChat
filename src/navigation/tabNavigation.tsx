@@ -3,7 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RNNotificationCall from 'react-native-full-screen-notification-incoming-call';
 import {APP_ROUTES} from '../constants';
-import {SessionCall, Users} from '../screens';
+import {JoinSessionCall, Users} from '../screens';
 import {IModalHandle} from '../interfaces';
 import {useAppDispatch} from '../redux';
 import {chatService} from '../services';
@@ -49,7 +49,7 @@ export const TabNavigator = () => {
               iconName = focused
                 ? 'account-multiple'
                 : 'account-multiple-outline';
-            } else if (route.name === APP_ROUTES.sessionCall) {
+            } else if (route.name === APP_ROUTES.joinSessionCall) {
               iconName = focused ? 'phone' : 'phone-outline';
             }
 
@@ -65,7 +65,10 @@ export const TabNavigator = () => {
         })}>
         <Tab.Screen name={APP_ROUTES.recentChat} component={RecentChatList} />
         <Tab.Screen name={APP_ROUTES.users} component={Users} />
-        <Tab.Screen name={APP_ROUTES.sessionCall} component={SessionCall} />
+        <Tab.Screen
+          name={APP_ROUTES.joinSessionCall}
+          component={JoinSessionCall}
+        />
       </Tab.Navigator>
     </>
   );

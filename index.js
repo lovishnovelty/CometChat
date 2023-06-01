@@ -15,7 +15,7 @@ import {
 import {IncomingCallScreen} from './src/screens';
 import firebase from '@react-native-firebase/app';
 
-firebase.initializeApp();
+// firebase.initializeApp();
 
 LocalNotificationServices.configure();
 

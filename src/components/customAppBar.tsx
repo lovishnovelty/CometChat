@@ -33,6 +33,7 @@ export const CustomAppBar = ({
                 <Icon
                   name={'chevron-left'}
                   onPress={navigation.goBack}
+                  color={'black'}
                   size={24}
                 />
               )}
@@ -43,9 +44,7 @@ export const CustomAppBar = ({
             stylesFromProps.titleContainer,
           ]}>
           {typeof title === 'string' ? (
-            <Text
-              style={[{textAlignVertical: 'center', alignSelf: 'center'}]}
-              numberOfLines={1}>
+            <Text style={[customAppBarStyles.textTitle]} numberOfLines={1}>
               {title}
             </Text>
           ) : (

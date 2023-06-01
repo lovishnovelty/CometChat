@@ -1,8 +1,13 @@
 import {StyleSheet} from 'react-native';
 
 export const globalStyles = StyleSheet.create({
+  flex1: {flex: 1},
   container: {
     padding: 20,
+    backgroundColor: 'white',
+    flex: 1,
+  },
+  containerWithoutPadding: {
     backgroundColor: 'white',
     flex: 1,
   },

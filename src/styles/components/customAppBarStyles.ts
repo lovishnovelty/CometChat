@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import normalize from 'react-native-normalize';
 
 export const customAppBarStyles = StyleSheet.create({
   appbarContainer: {
@@ -41,5 +42,11 @@ export const customAppBarStyles = StyleSheet.create({
   },
   action: {
     paddingLeft: 12,
+  },
+  textTitle: {
+    textAlignVertical: 'center',
+    alignSelf: 'center',
+    fontSize: normalize(20),
+    color: 'black',
   },
 });

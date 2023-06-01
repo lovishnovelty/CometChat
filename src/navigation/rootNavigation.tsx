@@ -4,10 +4,17 @@ import {useEffect, useState} from 'react';
 import {SafeAreaView, Text} from 'react-native';
 import {APP_ROUTES} from '../constants';
 import {restoreAuthState, useAppDispatch, useAppSelector} from '../redux';
-import {ChatScreen, CallScreen, OutgoingCallScreen, Login} from '../screens';
+import {
+  ChatScreen,
+  CallScreen,
+  OutgoingCallScreen,
+  Login,
+  SessionCall,
+} from '../screens';
 import {AuthService} from '../services';
 import {navigation} from '../utils';
 import {TabNavigator} from './tabNavigation';
+import {DirectCallScreen} from '../screens/directCall';
 
 export const RootNavigation = () => {
   const RootStack = createNativeStackNavigator();
@@ -36,8 +43,8 @@ export const RootNavigation = () => {
           }}>
           <RootStack.Screen name={APP_ROUTES.tab} component={TabNavigator} />
           <RootStack.Screen
-            name={APP_ROUTES.callScreen}
-            component={CallScreen}
+            name={APP_ROUTES.directCall}
+            component={DirectCallScreen}
           />
           <RootStack.Screen
             name={APP_ROUTES.chatScreen}
@@ -46,6 +53,10 @@ export const RootNavigation = () => {
           <RootStack.Screen
             name={APP_ROUTES.callingScreen}
             component={OutgoingCallScreen}
+          />
+          <RootStack.Screen
+            name={APP_ROUTES.sessionCall}
+            component={SessionCall}
           />
         </RootStack.Navigator>
       </SafeAreaView>

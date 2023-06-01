@@ -104,7 +104,6 @@ class ChatService {
 
     // return fetchNext function so that it can be called on scroll
     const chatList = await conversationRequest.fetchNext();
-
     return ChatUtility.transformChatList(chatList, userID);
   };
 
@@ -219,7 +218,7 @@ class ChatService {
           modalRef.current?.close();
         },
         onOutgoingCallAccepted: (acceptedCall: CometChat.Call) => {
-          navigation.replace(APP_ROUTES.callScreen, {
+          navigation.replace(APP_ROUTES.directCall, {
             sessionID: acceptedCall.getSessionId(),
           });
         },
@@ -237,7 +236,7 @@ class ChatService {
       CallStatus.INCOMING,
       acceptedCall.getCallInitiator().getName(),
     );
-    navigation.navigate(APP_ROUTES.callScreen, {
+    navigation.navigate(APP_ROUTES.directCall, {
       sessionID: acceptedCall.getSessionId(),
     });
   };
@@ -246,7 +245,7 @@ class ChatService {
     const acceptedCall = await CometChat.acceptCall(sessionId);
     navigation.reset({
       index: 0,
-      routeName: APP_ROUTES.callScreen,
+      routeName: APP_ROUTES.directCall,
       params: {sessionID: acceptedCall.getSessionId()},
     });
   };
@@ -286,6 +285,59 @@ class ChatService {
       CometChat.RECEIVER_TYPE.USER,
     );
     CometChat.endTyping(typingNotification);
+  };
+
+  createGroup = async ({
+    groupId,
+    groupName,
+    adminIds,
+    moderatorIds,
+    participantIds,
+    banMembers,
+  }: {
+    groupId: string;
+    groupName: string;
+    adminIds: string[];
+    moderatorIds: string[];
+    participantIds: string[];
+    banMembers: string[];
+  }) => {
+    try {
+      const group = new CometChat.Group(
+        groupId,
+        groupName,
+        CometChat.GROUP_TYPE.PUBLIC,
+      );
+      const members: CometChat.GroupMember[] = [];
+
+      for (let id of adminIds) {
+        members.push(
+          new CometChat.GroupMember(id, CometChat.GROUP_MEMBER_SCOPE.ADMIN),
+        );
+      }
+      for (let id of moderatorIds) {
+        members.push(
+          new CometChat.GroupMember(id, CometChat.GROUP_MEMBER_SCOPE.MODERATOR),
+        );
+      }
+      for (let id of participantIds) {
+        members.push(
+          new CometChat.GroupMember(
+            id,
+            CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT,
+          ),
+        );
+      }
+      const createdGroupObj = await CometChat.createGroupWithMembers(
+        group,
+        members,
+        banMembers,
+      );
+      CometChat.Group;
+      console.log('group createed ====>', createdGroupObj);
+    } catch (err) {
+      console.log('err white creating group', err);
+    }
   };
 }
 

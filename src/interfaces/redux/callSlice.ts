@@ -5,4 +5,7 @@ export interface ICallSlice {
     avatar: string;
   };
   currentChatUserID: string;
+  activeSessionDetail: {
+    sessionID: string;
+  };
 }
