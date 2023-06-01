@@ -1,5 +1,5 @@
 import {CallActionType, CallType} from '../enums';
-import {IUser} from './user';
+import {IGroup, IUser} from './user';
 export interface IMessage {
   id: string;
   conversationID: string;
@@ -9,7 +9,7 @@ export interface IMessage {
   isCallMessage: boolean;
   isMediaMessage: boolean;
   sender: IUser;
-  receiver: IUser;
+  receiver: IUser | IGroup;
   time: string;
   date: string;
   callDetails?: ICallDetail;
@@ -22,7 +22,7 @@ export interface ICallDetail {
   callActionType: CallActionType;
   isInitiatedByMe: boolean;
   initiator: IUser;
-  receiver: IUser;
+  receiver: IUser | IGroup;
 }
 
 export interface IMediaDetail {}

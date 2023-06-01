@@ -9,34 +9,28 @@ import {CustomAvatar} from './customAvatar';
 import {CustomDivider} from './customDivider';
 import {navigation} from '../utils';
 import {CometChat} from '@cometchat-pro/react-native-chat';
+import {ConvoType} from '../enums';
 
 export const ChatScreenAppBar = ({
   conversation,
 }: {
   conversation: IConversation;
 }) => {
-  const startVideoCall = async () => {
+  const {convoWith, convoType} = conversation;
+  const startCall = async (callType: string) => {
     const call = await chatService.initiateCall({
-      receiverID: conversation.otherUserID,
+      receiverID: convoWith.id,
+      callType,
+      receiverType:
+        convoType === ConvoType.GROUP
+          ? CometChat.RECEIVER_TYPE.GROUP
+          : CometChat.RECEIVER_TYPE.USER,
     });
 
     navigation.navigate(APP_ROUTES.callingScreen, {
       sessionID: call.getSessionId(),
-      otherUserAvatar: conversation.otherUserAvatar,
-      otherUserName: conversation.otherUserName,
-    });
-  };
-
-  const startAudioCall = async () => {
-    const call = await chatService.initiateCall({
-      receiverID: conversation.otherUserID,
-      callType: CometChat.CALL_TYPE.AUDIO,
-    });
-
-    navigation.navigate(APP_ROUTES.callingScreen, {
-      sessionID: call.getSessionId(),
-      otherUserAvatar: conversation.otherUserAvatar,
-      otherUserName: conversation.otherUserName,
+      otherUserAvatar: convoWith.avatar,
+      otherUserName: convoWith.name,
     });
   };
 
@@ -49,22 +43,22 @@ export const ChatScreenAppBar = ({
         color="black"
       />
       <View style={chatScreenAppBarStyles.detailContainer}>
-        <CustomAvatar url={conversation.otherUserAvatar} size={35} />
+        <CustomAvatar url={convoWith.avatar} size={35} />
         <CustomDivider axis="horizontal" size="xs" />
         <Text style={chatScreenAppBarStyles.name} numberOfLines={1}>
-          {conversation.otherUserName}
+          {convoWith.name}
         </Text>
       </View>
       <Icon
         name={'video-outline'}
-        onPress={startVideoCall}
+        onPress={() => startCall(CometChat.CALL_TYPE.VIDEO)}
         size={24}
         color="black"
         style={chatScreenAppBarStyles.icon}
       />
       <Icon
         name={'phone'}
-        onPress={startAudioCall}
+        onPress={() => startCall(CometChat.CALL_TYPE.AUDIO)}
         size={24}
         color="black"
         style={chatScreenAppBarStyles.icon}

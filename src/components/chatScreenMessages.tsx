@@ -44,11 +44,11 @@ export const ChatScreenMessages = ({
       onContentSizeChange={scrollToEnd}
       onLayout={scrollToEnd}
       showsVerticalScrollIndicator={false}
-      data={messageList.filter(message =>
-        message.callDetails
+      data={messageList.filter((message, i) => {
+        return message.callDetails
           ? message.callDetails.callActionType !== CallActionType.ONGOING
-          : true,
-      )}
+          : true;
+      })}
       contentContainerStyle={styles.list}
       renderItem={({
         item: {isTextMessage, isSentByMe, text, isCallMessage},

@@ -1,9 +1,13 @@
+import {ConvoType} from '../enums';
 import {IMessage} from './message';
 
 export interface IConversation {
   id: string;
+  convoType: ConvoType;
   lastMessage: IMessage;
-  otherUserID: string;
-  otherUserName: string;
-  otherUserAvatar: string;
+  convoWith: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
 }

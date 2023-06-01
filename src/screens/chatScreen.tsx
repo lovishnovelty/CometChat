@@ -12,6 +12,7 @@ import {IConversation} from '../interfaces';
 import {IMessage} from '../interfaces/message';
 import {setCurrentChatUserID, useAppDispatch, useAppSelector} from '../redux';
 import {ChatNotificaitonHandler, chatService} from '../services';
+import {ConvoType} from '../enums';
 
 export const ChatScreen = ({route}: any) => {
   const [gettingMessages, setGettingMessages] = useState(true);
@@ -21,20 +22,23 @@ export const ChatScreen = ({route}: any) => {
   const isFocused = useIsFocused();
   const authState = useAppSelector(state => state.auth);
   const conversation: IConversation = route.params;
-  const listenerID = conversation.otherUserID;
+  const convoWithId = conversation.convoWith.id;
+  const listenerID = convoWithId;
 
   const getMessageList = async () => {
-    chatService
-      .getMessagesByUID(authState.userID, conversation.otherUserID)
-      .then(data => {
-        setMessageList(data);
-        setGettingMessages(false);
-      });
+    const messages =
+      conversation.convoType === ConvoType.GROUP
+        ? await chatService.getGroupMessagesByGID(authState.userID, convoWithId)
+        : await chatService.getMessagesByUID(authState.userID, convoWithId);
+
+    setMessageList(messages);
+    setGettingMessages(false);
   };
 
   const onMessageReceived = (message: IMessage) => {
+    // check if group, and if yes use group id instead
     const senderID = message.sender.id;
-    if (conversation.otherUserID === senderID) {
+    if (convoWithId === senderID) {
       if (!conversation.id) conversation.id = message.conversationID;
       setMessageList(prev => [...prev, message]);
     }
@@ -42,14 +46,14 @@ export const ChatScreen = ({route}: any) => {
 
   const onTypingStarted = (typingIndicator: CometChat.TypingIndicator) => {
     const senderID = typingIndicator.getSender().getUid();
-    if (conversation.otherUserID === senderID) {
+    if (convoWithId === senderID) {
       setIsTyping(true);
     }
   };
 
   const onTypingEnded = (typingIndicator: CometChat.TypingIndicator) => {
     const senderID = typingIndicator.getSender().getUid();
-    if (conversation.otherUserID === senderID) {
+    if (convoWithId === senderID) {
       setIsTyping(false);
     }
   };
@@ -67,7 +71,7 @@ export const ChatScreen = ({route}: any) => {
     addMessageListener();
     getMessageList();
     ChatNotificaitonHandler.removeNotificationsByUserName(
-      conversation.otherUserName,
+      conversation.convoWith.name,
     );
     return () => {
       chatService.removeMessageListener(listenerID);
@@ -76,7 +80,7 @@ export const ChatScreen = ({route}: any) => {
 
   useEffect(() => {
     if (isFocused) {
-      dispatch(setCurrentChatUserID(conversation.otherUserID));
+      dispatch(setCurrentChatUserID(convoWithId));
     }
   }, [isFocused]);
 
@@ -90,7 +94,7 @@ export const ChatScreen = ({route}: any) => {
       )}
       <ChatScreenInput
         setMessageList={setMessageList}
-        receiverID={conversation.otherUserID}
+        receiverID={convoWithId}
       />
     </KeyboardAvoidingView>
   );

@@ -15,10 +15,10 @@ export const ChatListItem = ({
     <TouchableOpacity
       style={recentChatListItemStyles.container}
       onPress={onPress}>
-      <CustomAvatar url={conversation.otherUserAvatar} size={40} />
+      <CustomAvatar url={conversation.convoWith.avatar} size={40} />
       <View style={recentChatListItemStyles.detailsContainer}>
         <Text style={recentChatListItemStyles.name}>
-          {conversation.otherUserName}
+          {conversation.convoWith.name}
         </Text>
         <Text numberOfLines={2}>
           {conversation.lastMessage.isSentByMe &&

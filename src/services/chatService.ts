@@ -115,10 +115,27 @@ class ChatService {
       .build();
 
     const messageList = await messageRequest.fetchPrevious().catch(err => {
-      console.log(err);
+      console.log({uiderror: err});
       return [];
     });
     return ChatUtility.transformMessages(messageList, userID);
+  };
+
+  getGroupMessagesByGID = async (userID: string, groupID: string) => {
+    let limit = 30;
+    const messageRequest = this.messageRequestBuilder
+      .setLimit(limit)
+      .setGUID(groupID)
+      .build();
+
+    const messageList = await messageRequest.fetchPrevious().catch(err => {
+      console.log({grpiderror: err});
+      return [];
+    });
+    return ChatUtility.transformMessages(
+      messageList.filter(x => x.getCategory() !== 'action'), // ignore action message type (like added member in group)
+      userID,
+    );
   };
 
   sendTextMessage = async ({

@@ -1,8 +1,9 @@
 import {CometChat} from '@cometchat-pro/react-native-chat';
-import {CallActionType, CallType} from '../enums';
+import {CallActionType, CallType, ConvoType} from '../enums';
 import {
   ICallDetail,
   IConversation,
+  IGroup,
   IMediaDetail,
   IMessage,
   IUser,
@@ -18,27 +19,43 @@ export class ChatUtility {
     try {
       const transformedChatList = chatList.map(convo => {
         const convoWith = convo.getConversationWith();
-        // Ignore group chat
+        // Handle group convo
         if (convoWith instanceof CometChat.Group) {
-          return;
+          const group = convoWith;
+          return <IConversation>{
+            id: convo.getConversationId(),
+            convoType: ConvoType.GROUP,
+            lastMessage: this.transformSingleMessage(
+              convo.getLastMessage(),
+              userID,
+            ),
+            convoWith: {
+              id: group.getGuid(),
+              avatar: group.getIcon(),
+              name: group.getName(),
+            },
+          };
         }
+
+        // handle individual convo
         const otherUser = convoWith;
-        return {
+        return <IConversation>{
           id: convo.getConversationId(),
+          convoType: ConvoType.USER,
           lastMessage: this.transformSingleMessage(
             convo.getLastMessage(),
             userID,
           ),
-          otherUserName: otherUser.getName(),
-          otherUserAvatar: otherUser.getAvatar(),
-          otherUserID: otherUser.getUid(),
+          convoWith: {
+            id: otherUser.getUid(),
+            name: otherUser.getName(),
+            avatar: otherUser.getAvatar(),
+          },
         };
       });
-      return transformedChatList.filter(
-        x => x !== undefined,
-      ) as IConversation[];
+
+      return transformedChatList;
     } catch (err: any) {
-      console.log({errrrrrr: err.toString()});
       return [];
     }
   };
@@ -64,9 +81,14 @@ export class ChatUtility {
     const isSentByMe = userID === message.getSender().getUid();
     const messageInitiator = isSentByMe ? 'You' : message.getSender().getName();
     const sender = this.transformUser(message.getSender());
-    const receiver = this.transformUser(
-      message.getReceiver() as CometChat.User,
-    );
+
+    const receiver = message.getReceiver();
+    let transformedReceiver: IUser | IGroup;
+    if (receiver instanceof CometChat.Group) {
+      transformedReceiver = this.transformGroup(receiver);
+    } else {
+      transformedReceiver = this.transformUser(receiver);
+    }
 
     // call message details
     let callMessage = '';
@@ -76,20 +98,32 @@ export class ChatUtility {
       const callActionType = message.getAction() as CallActionType;
       const isInitiatedByMe = userID === message.getCallInitiator().getUid();
 
+      let receiver: IUser | IGroup;
+      const callReceiver = message.getCallReceiver();
+      if (callReceiver instanceof CometChat.Group) {
+        receiver = this.transformGroup(callReceiver);
+      } else {
+        receiver = this.transformUser(callReceiver);
+      }
       // sender is the user who rejected the call and initiated rejected message
-      const receiver =
-        callActionType === CallActionType.REJECTED
-          ? this.transformUser(message.getSender() as CometChat.User)
-          : this.transformUser(message.getCallReceiver() as CometChat.User);
+      if (
+        callActionType === CallActionType.REJECTED ||
+        callActionType === CallActionType.LEFT
+      ) {
+        receiver = this.transformUser(message.getSender());
+      }
+      // callActionType === CallActionType.REJECTED
+      //   ? this.transformUser(message.getSender() as CometChat.User)
+      //   : this.transformUser(message.getCallReceiver() as CometChat.User);
       callDetails = {
         callType,
         callActionType,
         initiator: this.transformUser(message.getCallInitiator()),
-        receiver,
         isInitiatedByMe,
+        receiver,
         sessionID: message.getSessionId(),
       };
-      callMessage = this.getCallMessage(callDetails, isInitiatedByMe);
+      callMessage = this.getCallMessage(callDetails);
     }
 
     // media message details
@@ -114,7 +148,7 @@ export class ChatUtility {
       conversationID,
       text,
       sender,
-      receiver,
+      receiver: transformedReceiver,
       isSentByMe,
       isTextMessage,
       isCallMessage,
@@ -126,24 +160,27 @@ export class ChatUtility {
     };
   };
 
-  static getCallMessage = (
-    callDetails: ICallDetail,
-    isInitiatedByMe: boolean,
-  ): string => {
+  static getCallMessage = ({
+    isInitiatedByMe,
+    callActionType,
+    callType,
+    initiator,
+    receiver,
+  }: ICallDetail): string => {
     let callMessage = '';
-    const article = callDetails.callType === CallType.AUDIO ? 'an' : 'a';
-    const callInitiator = isInitiatedByMe ? 'You' : callDetails.initiator.name;
-    const missedCallUser = isInitiatedByMe ? callDetails.receiver.name : 'You'; // user who missed the call
-    const missedCallMessage = `${missedCallUser} missed ${article} ${callDetails.callType} call.`;
-    switch (callDetails.callActionType) {
+    const article = callType === CallType.AUDIO ? 'an' : 'a';
+    const callInitiator = isInitiatedByMe ? 'You' : initiator.name;
+    const missedCallUser = isInitiatedByMe ? receiver.name : 'You'; // user who missed the call
+    const missedCallMessage = `${missedCallUser} missed ${article} ${callType} call.`;
+    switch (callActionType) {
       case CallActionType.INITIATED:
-        callMessage = `${callInitiator} started ${article} ${callDetails.callType} call.`;
+        callMessage = `${callInitiator} started ${article} ${callType} call.`;
         break;
       case CallActionType.ONGOING:
         callMessage = `Ongoing Call.`;
         break;
       case CallActionType.ENDED:
-        callMessage = `${capitalizeInitials(callDetails.callType)} call ended.`;
+        callMessage = `${capitalizeInitials(callType)} call ended.`;
         break;
       case CallActionType.CANCELLED:
         callMessage = missedCallMessage;
@@ -153,6 +190,9 @@ export class ChatUtility {
         break;
       case CallActionType.REJECTED:
         callMessage = missedCallMessage;
+        break;
+      case CallActionType.LEFT:
+        callMessage = `${missedCallUser} left the called`;
         break;
     }
     return callMessage;
@@ -165,5 +205,15 @@ export class ChatUtility {
       avatar: user.getAvatar(),
     };
     return transformedUser;
+  };
+  static transformGroup = (group: CometChat.Group): IGroup => {
+    const transformedGroup: IGroup = {
+      groupId: group.getGuid(),
+      name: group.getName(),
+      icon: group.getIcon(),
+      description: group.getDescription(),
+      memberCount: group.getMembersCount(),
+    };
+    return transformedGroup;
   };
 }
