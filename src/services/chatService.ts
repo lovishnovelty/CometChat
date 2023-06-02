@@ -74,8 +74,6 @@ class ChatService {
       listenerID,
       new CometChat.MessageListener({
         onTextMessageReceived: (textMessage: CometChat.TextMessage) => {
-          console.log('received');
-
           onMessageReceived(
             ChatUtility.transformSingleMessage(textMessage, userId),
           );
@@ -104,6 +102,7 @@ class ChatService {
 
     // return fetchNext function so that it can be called on scroll
     const chatList = await conversationRequest.fetchNext();
+
     return ChatUtility.transformChatList(chatList, userID);
   };
 

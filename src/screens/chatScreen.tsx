@@ -22,6 +22,7 @@ export const ChatScreen = ({route}: any) => {
   const isFocused = useIsFocused();
   const authState = useAppSelector(state => state.auth);
   const conversation: IConversation = route.params;
+
   const convoWithId = conversation.convoWith.id;
   const listenerID = convoWithId;
 
@@ -36,11 +37,14 @@ export const ChatScreen = ({route}: any) => {
   };
 
   const onMessageReceived = (message: IMessage) => {
-    const senderID =
-      conversation.convoType === ConvoType.GROUP
-        ? message.receiver.id
-        : message.sender.id;
-    if (convoWithId === senderID) {
+    let idToCheck;
+    if (conversation.convoType === ConvoType.GROUP) {
+      const group = message.receiver as any; // group object is received by getGuid() was undefined
+      idToCheck = group.groupId;
+    } else {
+      idToCheck = message.sender.id;
+    }
+    if (convoWithId === idToCheck) {
       if (!conversation.id) conversation.id = message.conversationID;
       setMessageList(prev => [...prev, message]);
     }
@@ -97,6 +101,7 @@ export const ChatScreen = ({route}: any) => {
       <ChatScreenInput
         setMessageList={setMessageList}
         receiverID={convoWithId}
+        convoType={conversation.convoType}
       />
     </KeyboardAvoidingView>
   );

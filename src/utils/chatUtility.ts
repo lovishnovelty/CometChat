@@ -19,6 +19,8 @@ export class ChatUtility {
     try {
       const transformedChatList = chatList.map(convo => {
         const convoWith = convo.getConversationWith();
+        if (convo.getLastMessage() === undefined) return;
+
         // Handle group convo
         if (convoWith instanceof CometChat.Group) {
           const group = convoWith;
@@ -54,8 +56,12 @@ export class ChatUtility {
         };
       });
 
-      return transformedChatList;
+      return transformedChatList.filter(
+        x => x !== undefined,
+      ) as IConversation[];
     } catch (err: any) {
+      console.log(userID, 'eerror ===>?', err);
+
       return [];
     }
   };

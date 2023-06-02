@@ -5,13 +5,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IMessage} from '../interfaces/message';
 import {AuthService, chatService} from '../services';
 import {useAppSelector} from '../redux';
+import {CometChat} from '@cometchat-pro/react-native-chat';
+import {ConvoType} from '../enums';
 
 export const ChatScreenInput = ({
   setMessageList,
   receiverID,
+  convoType,
 }: {
   setMessageList: React.Dispatch<React.SetStateAction<IMessage[]>>;
   receiverID: string;
+  convoType: ConvoType;
 }) => {
   const [height, setHeight] = useState(40);
   const [text, setText] = useState('');
@@ -57,6 +61,10 @@ export const ChatScreenInput = ({
       .sendTextMessage({
         userID,
         receiverID,
+        receiverType:
+          convoType === ConvoType.GROUP
+            ? CometChat.RECEIVER_TYPE.GROUP
+            : CometChat.RECEIVER_TYPE.USER,
         message: text,
       })
       .then(message => {

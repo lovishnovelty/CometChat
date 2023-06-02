@@ -19,7 +19,7 @@ const groupDetails: {
   participantIds: string[];
   banMembers: string[];
 } = {
-  adminIds: ['eoix3'],
+  adminIds: ['eoix3', 'dsoex'],
   moderatorIds: [],
   participantIds: [],
   banMembers: [],

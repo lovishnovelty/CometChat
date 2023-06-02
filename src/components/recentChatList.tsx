@@ -27,6 +27,7 @@ export const RecentChatList = () => {
       .finally(() => {
         setGettingChatList(false);
       });
+
     setChatList(chatList);
   };
 
